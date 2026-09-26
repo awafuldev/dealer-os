@@ -1,0 +1,393 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+enum Role {
+  ADMIN
+  SALES
+  FINANCE
+  SUPERVISOR
+}
+
+enum VehicleStatus {
+  DISPONIBLE
+  RESERVADO
+  NEGOCIACION
+  VENDIDO
+  MANTENIMIENTO
+  FUERA_INVENTARIO
+}
+
+enum LeadStage {
+  NUEVO
+  CONTACTADO
+  INTERESADO
+  NEGOCIACION
+  RESERVADO
+  VENDIDO
+  PERDIDO
+}
+
+enum ReservationStatus {
+  CONFIRMADA
+  CANCELADA
+  CONVERTIDA_A_VENTA
+}
+
+enum SaleStatus {
+  EN_PROCESO
+  COMPLETADA
+  CANCELADA
+}
+
+enum PaymentStatus {
+  PAGADO
+  PENDIENTE
+  ANULADO
+}
+
+model Organization {
+  id              String           @id @default(uuid())
+  name            String
+  rnc             String?
+  phone           String?
+  whatsapp        String?
+  email           String?
+  address         String?
+  logo            String?
+  createdAt       DateTime         @default(now())
+  updatedAt       DateTime         @updatedAt
+
+  users           User[]
+  vehicles        Vehicle[]
+  customers       Customer[]
+  leads           Lead[]
+  reservations    Reservation[]
+  sales           Sale[]
+  documents       Document[]
+  generalExpenses GeneralExpense[]
+  auditLogs       AuditLog[]
+  siteSettings    SiteSettings?
+}
+
+model User {
+  id             String        @id @default(uuid())
+  organizationId String
+  name           String
+  email          String        @unique
+  passwordHash   String
+  role           Role          @default(SALES)
+  active         Boolean       @default(true)
+  createdAt      DateTime      @default(now())
+  updatedAt      DateTime      @updatedAt
+
+  organization   Organization  @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+  leads          Lead[]        @relation("AssignedUser")
+  sales          Sale[]        @relation("SellerUser")
+  leadActivities LeadActivity[]
+  auditLogs      AuditLog[]
+
+  @@index([organizationId])
+}
+
+model Vehicle {
+  id              String            @id @default(uuid())
+  organizationId  String
+  brand           String
+  model           String
+  year            Int
+  vin             String?
+  plate           String?
+  color           String?
+  transmission    String            @default("Automática")
+  fuel            String            @default("Gasolina")
+  drivetrain      String?           @default("4x2")
+  mileage         Int               @default(0)
+  purchasePrice   Float             @default(0)
+  salePrice       Float             @default(0)
+  status          VehicleStatus     @default(DISPONIBLE)
+  acquisitionDate DateTime?
+  notes           String?
+  isPublished     Boolean           @default(true)
+  slug            String?           @unique
+  bodyType        String?           // SUV, Sedán, Pick-Up, Hatchback, etc. (para filtro público)
+  description     String?           // Descripción comercial para la ficha pública
+  vinPublic       Boolean           @default(false) // Solo se muestra el VIN en el showroom si está en true
+  featuredOnHome  Boolean           @default(false) // Vehículo destacado en el hero del showroom
+  createdAt       DateTime          @default(now())
+  updatedAt       DateTime          @updatedAt
+
+  organization    Organization      @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+  images          VehicleImage[]
+  expenses        VehicleExpense[]
+  leads           Lead[]
+  reservations    Reservation[]
+  sales           Sale[]
+  documents       Document[]
+
+  @@index([organizationId])
+  @@index([status])
+}
+
+model VehicleImage {
+  id        String   @id @default(uuid())
+  vehicleId String
+  url       String
+  order     Int      @default(0)
+  isCover   Boolean  @default(false)
+  createdAt DateTime @default(now())
+
+  vehicle   Vehicle  @relation(fields: [vehicleId], references: [id], onDelete: Cascade)
+
+  @@index([vehicleId])
+}
+
+model VehicleExpense {
+  id          String   @id @default(uuid())
+  vehicleId   String
+  category    String   // Traspaso, Mecánica, Gomas, Detailing, etc.
+  description String
+  amount      Float
+  date        DateTime @default(now())
+  createdBy   String?
+  createdAt   DateTime @default(now())
+
+  vehicle     Vehicle  @relation(fields: [vehicleId], references: [id], onDelete: Cascade)
+
+  @@index([vehicleId])
+}
+
+model Customer {
+  id             String        @id @default(uuid())
+  organizationId String
+  name           String
+  phone          String?
+  whatsapp       String
+  email          String?
+  cedulaOrRnc    String?
+  budget         Float?
+  notes          String?
+  createdAt      DateTime      @default(now())
+  updatedAt      DateTime      @updatedAt
+
+  organization   Organization  @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+  leads          Lead[]
+  reservations   Reservation[]
+  sales          Sale[]
+  documents      Document[]
+
+  @@index([organizationId])
+}
+
+model Lead {
+  id             String         @id @default(uuid())
+  organizationId String
+  customerId     String
+  vehicleId      String?
+  assignedUserId String?
+  source         String         @default("WhatsApp") // WhatsApp, Instagram, Facebook, Web, Referido, etc.
+  stage          LeadStage      @default(NUEVO)
+  nextFollowUp   DateTime?
+  notes          String?
+  createdAt      DateTime       @default(now())
+  updatedAt      DateTime       @updatedAt
+
+  organization   Organization   @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+  customer       Customer       @relation(fields: [customerId], references: [id], onDelete: Cascade)
+  vehicle        Vehicle?       @relation(fields: [vehicleId], references: [id], onDelete: SetNull)
+  assignedUser   User?          @relation("AssignedUser", fields: [assignedUserId], references: [id], onDelete: SetNull)
+  activities     LeadActivity[]
+
+  @@index([organizationId])
+  @@index([customerId])
+  @@index([stage])
+}
+
+model LeadActivity {
+  id        String   @id @default(uuid())
+  leadId    String
+  userId    String?
+  type      String   // llamada, mensaje, nota, cambio_etapa
+  content   String
+  createdAt DateTime @default(now())
+
+  lead      Lead     @relation(fields: [leadId], references: [id], onDelete: Cascade)
+  user      User?    @relation(fields: [userId], references: [id], onDelete: SetNull)
+
+  @@index([leadId])
+}
+
+model Reservation {
+  id             String            @id @default(uuid())
+  organizationId String
+  customerId     String
+  vehicleId      String
+  amount         Float
+  paymentMethod  String            @default("Transferencia")
+  expiresAt      DateTime?
+  status         ReservationStatus @default(CONFIRMADA)
+  notes          String?
+  createdBy      String?
+  createdAt      DateTime          @default(now())
+  updatedAt      DateTime          @updatedAt
+
+  organization   Organization      @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+  customer       Customer          @relation(fields: [customerId], references: [id], onDelete: Cascade)
+  vehicle        Vehicle           @relation(fields: [vehicleId], references: [id], onDelete: Cascade)
+
+  @@index([organizationId])
+  @@index([vehicleId])
+  @@index([customerId])
+}
+
+model Sale {
+  id             String        @id @default(uuid())
+  organizationId String
+  vehicleId      String
+  customerId     String
+  sellerId       String?
+  finalPrice     Float
+  downPayment    Float         @default(0)
+  financedAmount Float         @default(0)
+  balance        Float         @default(0)
+  status         SaleStatus    @default(COMPLETADA)
+  saleDate       DateTime      @default(now())
+  notes          String?
+  createdAt      DateTime      @default(now())
+  updatedAt      DateTime      @updatedAt
+
+  organization   Organization  @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+  vehicle        Vehicle       @relation(fields: [vehicleId], references: [id], onDelete: Cascade)
+  customer       Customer      @relation(fields: [customerId], references: [id], onDelete: Cascade)
+  seller         User?         @relation("SellerUser", fields: [sellerId], references: [id], onDelete: SetNull)
+  payments       SalePayment[]
+  documents      Document[]
+
+  @@index([organizationId])
+  @@index([vehicleId])
+  @@index([customerId])
+}
+
+model SalePayment {
+  id        String        @id @default(uuid())
+  saleId    String
+  amount    Float
+  method    String        // Transferencia, Efectivo, Deposito, etc.
+  status    PaymentStatus @default(PAGADO)
+  date      DateTime      @default(now())
+  receipt   String?
+  notes     String?
+  createdBy String?
+  createdAt DateTime      @default(now())
+
+  sale      Sale          @relation(fields: [saleId], references: [id], onDelete: Cascade)
+
+  @@index([saleId])
+}
+
+model Document {
+  id             String       @id @default(uuid())
+  organizationId String
+  customerId     String?
+  vehicleId      String?
+  saleId         String?
+  title          String
+  category       String       // Contrato de venta, Factura, Recibo, Matrícula / Documento del vehículo, Seguro, Otros
+  fileUrl        String?
+  fileSize       Int?
+  uploadedBy     String?
+  status         String       @default("Completo") // Pendiente, Completo
+  notes          String?
+  createdAt      DateTime     @default(now())
+
+  organization   Organization @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+  customer       Customer?    @relation(fields: [customerId], references: [id], onDelete: SetNull)
+  vehicle        Vehicle?     @relation(fields: [vehicleId], references: [id], onDelete: SetNull)
+  sale           Sale?        @relation(fields: [saleId], references: [id], onDelete: SetNull)
+
+  @@index([organizationId])
+  @@index([customerId])
+  @@index([vehicleId])
+  @@index([saleId])
+}
+
+model GeneralExpense {
+  id             String       @id @default(uuid())
+  organizationId String
+  category       String       // Local, Nómina, Marketing, Servicios, Mantenimiento local, Impuestos, Otros
+  description    String
+  amount         Float
+  date           DateTime     @default(now())
+  notes          String?
+  createdBy      String?
+  createdAt      DateTime     @default(now())
+
+  organization   Organization @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+
+  @@index([organizationId])
+}
+
+// Contenido configurable del showroom público. Todo es opcional a propósito:
+// si un campo no ha sido configurado desde Dealer OS, la sección
+// correspondiente en el sitio público simplemente no se muestra (o muestra
+// un estado neutral), en vez de inventar información del dealer.
+model SiteSettings {
+  id             String   @id @default(uuid())
+  organizationId String   @unique
+
+  // Hero / identidad
+  heroHeadline    String?
+  heroSubheadline String?
+  instagramHandle String?
+  instagramUrl    String?
+  facebookUrl     String?
+  mapEmbedUrl     String?
+  visitHours      String? // Ej: "Lunes a sábado, 9:00 a.m. – 6:00 p.m."
+
+  // Bloques de confianza (título + texto). Contenido editorial sobre el
+  // proceso del dealer, nunca estadísticas o cifras no verificadas.
+  trustTitle1 String?
+  trustText1  String?
+  trustTitle2 String?
+  trustText2  String?
+  trustTitle3 String?
+  trustText3  String?
+  trustTitle4 String?
+  trustText4  String?
+  trustTitle5 String?
+  trustText5  String?
+  trustTitle6 String?
+  trustText6  String?
+
+  // Financiamiento
+  financingIntro    String?
+  financingBanks    String? // Lista separada por comas, ej: "Banco Popular, BHD, Scotiabank"
+  minDownPaymentPct Float? // % mínimo de inicial, si el dealer lo define
+  maxTermMonths     Int? // Plazo máximo en meses, si el dealer lo define
+  estimatedRatePct  Float? // Tasa anual estimada para la calculadora (solo referencial)
+
+  updatedAt DateTime @updatedAt
+
+  organization Organization @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+}
+
+model AuditLog {
+  id             String       @id @default(uuid())
+  organizationId String
+  userId         String?
+  action         String       // CREAR_VEHICULO, CAMBIAR_PRECIO, REGISTRAR_PAGO, etc.
+  entity         String       // Vehicle, Sale, Customer, etc.
+  entityId       String?
+  details        String?
+  createdAt      DateTime     @default(now())
+
+  organization   Organization @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+  user           User?        @relation(fields: [userId], references: [id], onDelete: SetNull)
+
+  @@index([organizationId])
+}
