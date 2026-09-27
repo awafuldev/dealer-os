@@ -20,7 +20,7 @@ export function LoginForm() {
     const res = await loginAction(formData);
 
     if (res.success) {
-      router.push("/");
+      router.push("/admin");
       router.refresh();
     } else {
       setLoading(false);

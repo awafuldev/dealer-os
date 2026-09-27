@@ -24,7 +24,7 @@ import { logoutAction } from "@/actions/authActions";
 import { GlobalSearch } from "./GlobalSearch";
 
 const navigation = [
-  { name: "Inicio", href: "/", icon: LayoutDashboard, section: "main" },
+  { name: "Inicio", href: "/admin", icon: LayoutDashboard, section: "main" },
   
   // OPERACIÓN
   { name: "Inventario", href: "/inventory", icon: Car, section: "operacion" },
@@ -39,7 +39,7 @@ const navigation = [
   
   // SISTEMA
   { name: "Configuración", href: "/settings", icon: Settings, section: "sistema" },
-  { name: "Ver Showroom", href: "/showroom", icon: Sparkles, section: "sistema", external: true },
+  { name: "Ver Showroom", href: "/", icon: Sparkles, section: "sistema", external: true },
 ];
 
 export function Sidebar({ orgName }: { orgName: string }) {
@@ -48,8 +48,8 @@ export function Sidebar({ orgName }: { orgName: string }) {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
   const isLinkActive = (href: string) => {
-    if (href === "/") return pathname === "/";
-    if (href === "/showroom") return false;
+    if (href === "/admin") return pathname === "/admin";
+    if (href === "/" || href === "/showroom") return false;
     return pathname.startsWith(href);
   };
 
@@ -240,9 +240,9 @@ export function Sidebar({ orgName }: { orgName: string }) {
       {/* Mobile Bottom Navigation Bar (Tabs) */}
       <nav className="md:hidden fixed bottom-0 left-0 right-0 bg-white/95 backdrop-blur-md border-t border-[#b3b5b7]/30 z-40 flex items-center justify-around py-1.5 px-2 shadow-lg">
         <Link
-          href="/"
+          href="/admin"
           className={`flex flex-col items-center gap-0.5 py-1 px-3 rounded-xl transition-all ${
-            pathname === "/" ? "text-[#cc62d5] font-bold" : "text-[#737577]"
+            pathname === "/admin" ? "text-[#cc62d5] font-bold" : "text-[#737577]"
           }`}
         >
           <LayoutDashboard className="w-5 h-5" />

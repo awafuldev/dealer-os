@@ -3,16 +3,14 @@ import { NextRequest, NextResponse } from "next/server";
 const SESSION_COOKIE = "dealer_os_session";
 
 /**
- * Rutas públicas: el showroom, la página de login y los estáticos que sirve
- * el propio servidor (logo, hero, imágenes subidas de vehículos, SEO).
- *
- * IMPORTANTE: esto es solo la primera capa (evita renderizar páginas
- * administrativas sin sesión y redirige rápido). La autorización real ocurre
- * en el servidor dentro de cada página/Server Action mediante
- * requireSession(), que sí verifica la firma del JWT contra la base de
- * datos — el middleware por sí solo nunca es suficiente.
+ * Rutas públicas:
+ * - La página de inicio (/) que es el Showroom público de vehículos.
+ * - /showroom y sus fichas de vehículos (/showroom/vehiculos/[slug]).
+ * - /login para que el administrador pueda acceder a su cuenta.
+ * - Archivos estáticos, imágenes de vehículos y archivos SEO.
  */
 function isPublicPath(pathname: string): boolean {
+  if (pathname === "/") return true;
   if (pathname === "/login") return true;
   if (pathname === "/showroom" || pathname.startsWith("/showroom/")) return true;
   if (pathname.startsWith("/brand/")) return true;
@@ -25,24 +23,20 @@ export function middleware(request: NextRequest) {
   const { pathname } = request.nextUrl;
   const hasSessionCookie = Boolean(request.cookies.get(SESSION_COOKIE)?.value);
 
+  // Si ya tiene sesión activa y visita /login, enviarlo al panel administrativo
   if (pathname === "/login") {
-    // Si ya hay una sesión (cookie presente), no tiene sentido ver el login.
-    // La validez real se confirma dentro de la propia página /login.
     if (hasSessionCookie) {
-      return NextResponse.redirect(new URL("/", request.url));
+      return NextResponse.redirect(new URL("/admin", request.url));
     }
     return NextResponse.next();
   }
 
+  // Si es ruta pública, permitir el acceso sin restricciones
   if (isPublicPath(pathname)) {
     return NextResponse.next();
   }
 
-  // Si abren la página de inicio (/) sin sesión, mostrar el Showroom público en vez de obligar al login
-  if (pathname === "/" && !hasSessionCookie) {
-    return NextResponse.redirect(new URL("/showroom", request.url));
-  }
-
+  // Cualquier ruta privada (ej: /admin, /inventory, /leads, /sales, etc.) requiere login
   if (!hasSessionCookie) {
     const loginUrl = new URL("/login", request.url);
     return NextResponse.redirect(loginUrl);
