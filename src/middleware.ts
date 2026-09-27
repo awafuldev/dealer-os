@@ -38,6 +38,11 @@ export function middleware(request: NextRequest) {
     return NextResponse.next();
   }
 
+  // Si abren la página de inicio (/) sin sesión, mostrar el Showroom público en vez de obligar al login
+  if (pathname === "/" && !hasSessionCookie) {
+    return NextResponse.redirect(new URL("/showroom", request.url));
+  }
+
   if (!hasSessionCookie) {
     const loginUrl = new URL("/login", request.url);
     return NextResponse.redirect(loginUrl);
