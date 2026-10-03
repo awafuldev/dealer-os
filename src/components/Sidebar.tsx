@@ -25,21 +25,17 @@ import { GlobalSearch } from "./GlobalSearch";
 
 const navigation = [
   { name: "Inicio", href: "/admin", icon: LayoutDashboard, section: "main" },
+  { name: "Inventario", href: "/inventory", icon: Car, section: "main" },
+  { name: "Prospectos", href: "/leads", icon: Clock, section: "main" },
+  { name: "Ventas", href: "/sales", icon: BadgeDollarSign, section: "main" },
+  { name: "Clientes", href: "/customers", icon: Users, section: "main" },
+  { name: "Dinero", href: "/finance", icon: DollarSign, section: "main" },
+  { name: "Ajustes", href: "/settings", icon: Settings, section: "main" },
   
-  // OPERACIÓN
-  { name: "Inventario", href: "/inventory", icon: Car, section: "operacion" },
-  { name: "Leads", href: "/leads", icon: Clock, section: "operacion" },
-  { name: "Clientes", href: "/customers", icon: Users, section: "operacion" },
-  { name: "Ventas", href: "/sales", icon: BadgeDollarSign, section: "operacion" },
-  
-  // GESTIÓN
-  { name: "Finanzas", href: "/finance", icon: DollarSign, section: "gestion" },
-  { name: "Documentos", href: "/contracts", icon: FileText, section: "gestion" },
-  { name: "Auditoría", href: "/audit", icon: ShieldCheck, section: "gestion" },
-  
-  // SISTEMA
-  { name: "Configuración", href: "/settings", icon: Settings, section: "sistema" },
-  { name: "Ver Showroom", href: "/", icon: Sparkles, section: "sistema", external: true },
+  // Secundarios bajo "Más"
+  { name: "Documentos", href: "/contracts", icon: FileText, section: "secundario" },
+  { name: "Auditoría", href: "/audit", icon: ShieldCheck, section: "secundario" },
+  { name: "Ver Showroom", href: "/", icon: Sparkles, section: "secundario", external: true },
 ];
 
 export function Sidebar({ orgName }: { orgName: string }) {
@@ -108,38 +104,14 @@ export function Sidebar({ orgName }: { orgName: string }) {
 
         {/* Navigation Sections */}
         <nav className="flex-1 px-3 py-3 space-y-4 overflow-y-auto">
-          {/* Main: Inicio */}
-          <div>
-            {navigation
-              .filter((i) => i.section === "main")
-              .map((item) => {
-                const active = isLinkActive(item.href);
-                const Icon = item.icon;
-                return (
-                  <Link
-                    key={item.name}
-                    href={item.href}
-                    className={`flex items-center gap-3 px-3.5 py-2.5 rounded-[19px] text-sm font-medium transition-all ${
-                      active
-                        ? "bg-[#cc62d5] text-white shadow-xs font-semibold"
-                        : "text-[#737577] hover:text-[#131517] hover:bg-[#f4f5f6]"
-                    }`}
-                  >
-                    <Icon className={`w-4 h-4 ${active ? "text-white" : "text-[#737577]"}`} />
-                    <span>{item.name}</span>
-                  </Link>
-                );
-              })}
-          </div>
-
-          {/* Operación */}
+          {/* Menú Principal */}
           <div>
             <p className="px-3.5 text-[10px] font-bold text-[#737577] uppercase tracking-wider mb-1">
-              Operación
+              Menú Principal
             </p>
             <div className="space-y-0.5">
               {navigation
-                .filter((i) => i.section === "operacion")
+                .filter((i) => i.section === "main")
                 .map((item) => {
                   const active = isLinkActive(item.href);
                   const Icon = item.icon;
@@ -161,43 +133,14 @@ export function Sidebar({ orgName }: { orgName: string }) {
             </div>
           </div>
 
-          {/* Gestión */}
+          {/* Más opciones */}
           <div>
             <p className="px-3.5 text-[10px] font-bold text-[#737577] uppercase tracking-wider mb-1">
-              Gestión
+              Más
             </p>
             <div className="space-y-0.5">
               {navigation
-                .filter((i) => i.section === "gestion")
-                .map((item) => {
-                  const active = isLinkActive(item.href);
-                  const Icon = item.icon;
-                  return (
-                    <Link
-                      key={item.name}
-                      href={item.href}
-                      className={`flex items-center gap-3 px-3.5 py-2.5 rounded-[19px] text-sm font-medium transition-all ${
-                        active
-                          ? "bg-[#cc62d5] text-white shadow-xs font-semibold"
-                          : "text-[#737577] hover:text-[#131517] hover:bg-[#f4f5f6]"
-                      }`}
-                    >
-                      <Icon className={`w-4 h-4 ${active ? "text-white" : "text-[#737577]"}`} />
-                      <span>{item.name}</span>
-                    </Link>
-                  );
-                })}
-            </div>
-          </div>
-
-          {/* Sistema */}
-          <div>
-            <p className="px-3.5 text-[10px] font-bold text-[#737577] uppercase tracking-wider mb-1">
-              Sistema
-            </p>
-            <div className="space-y-0.5">
-              {navigation
-                .filter((i) => i.section === "sistema")
+                .filter((i) => i.section === "secundario")
                 .map((item) => {
                   const active = isLinkActive(item.href);
                   const Icon = item.icon;
@@ -264,7 +207,7 @@ export function Sidebar({ orgName }: { orgName: string }) {
           }`}
         >
           <Clock className="w-5 h-5" />
-          <span className="text-[10px]">Leads</span>
+          <span className="text-[10px]">Prospectos</span>
         </Link>
         <Link
           href="/sales"

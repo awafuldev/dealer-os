@@ -489,16 +489,16 @@ export function VehicleDetailView({ vehicle, customers }: VehicleDetailProps) {
                   </span>
                 </div>
                 <div className="flex justify-between font-bold text-[#131517] pt-2 border-t border-[#b3b5b7]/20 text-sm">
-                  <span>Inversión Total:</span>
+                  <span>Lo que me costó (Costo real):</span>
                   <span className="font-mono">{formatCurrencyRD(vehicle.totalCost)}</span>
                 </div>
                 <div className="flex justify-between font-bold text-[#cc62d5] pt-1 text-sm">
-                  <span>Ganancia Estimada:</span>
+                  <span>Lo que gané (Ganancia):</span>
                   <span className="font-mono">{formatCurrencyRD(vehicle.grossMargin)}</span>
                 </div>
-                <div className="flex justify-between text-[#737577] text-[11px] pt-1">
-                  <span>Margen / ROI:</span>
-                  <span className="font-bold text-[#131517]">{vehicle.roiPercentage}%</span>
+                <div className="flex justify-between text-[#737577] text-[11px] pt-1 items-center">
+                  <span>Ganancia sobre lo invertido (ROI):</span>
+                  <span className="font-bold text-[#131517] font-mono">{vehicle.roiPercentage}%</span>
                 </div>
               </div>
 

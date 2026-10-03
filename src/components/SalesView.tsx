@@ -1,4 +1,4 @@
-"use client";
+﻿"use client";
 
 import { useState } from "react";
 import {
@@ -63,7 +63,7 @@ export function SalesView({ sales, availableVehicles, customers }: SalesViewProp
     const res = await createSaleAction(form);
     setLoading(false);
     if (res.success) {
-      setMessage({ type: "success", text: "¡Venta registrada! El vehículo pasó a VENDIDO y se actualizó el historial." });
+      setMessage({ type: "success", text: "Â¡Venta registrada! El vehÃ­culo pasÃ³ a VENDIDO y se actualizÃ³ el historial." });
       setTimeout(() => { setShowNewSaleModal(false); setMessage(null); }, 1500);
     } else {
       setMessage({ type: "error", text: res.error || "Error al registrar la venta." });
@@ -79,7 +79,7 @@ export function SalesView({ sales, availableVehicles, customers }: SalesViewProp
     const res = await addPaymentAction(form);
     setLoading(false);
     if (res.success) {
-      setMessage({ type: "success", text: "¡Cobro aplicado y saldo actualizado correctamente!" });
+      setMessage({ type: "success", text: "Â¡Cobro aplicado y saldo actualizado correctamente!" });
       setTimeout(() => { setPaymentModalSale(null); setMessage(null); }, 1500);
     } else {
       setMessage({ type: "error", text: res.error || "Error al registrar cobro." });
@@ -153,9 +153,9 @@ export function SalesView({ sales, availableVehicles, customers }: SalesViewProp
       {sales.length === 0 ? (
         <div className="text-center py-16 border border-dashed border-[#b3b5b7]/40 rounded-[32px] bg-white p-8">
           <ShoppingBag className="w-12 h-12 text-[#b3b5b7] mx-auto mb-3" />
-          <h3 className="text-base font-bold text-[#131517]">Aún no hay ventas registradas</h3>
+          <h3 className="text-base font-bold text-[#131517]">AÃºn no hay ventas registradas</h3>
           <p className="text-xs text-[#737577] mt-1 max-w-sm mx-auto">
-            Cuando cierres una venta asociando un vehículo a un cliente, quedará registrada aquí con sus pagos y saldo.
+            Cuando cierres una venta asociando un vehÃ­culo a un cliente, quedarÃ¡ registrada aquÃ­ con sus pagos y saldo.
           </p>
           <button
             onClick={() => setShowNewSaleModal(true)}
@@ -179,7 +179,7 @@ export function SalesView({ sales, availableVehicles, customers }: SalesViewProp
                     <div className="flex items-center gap-2 mt-0.5">
                       <User className="w-3.5 h-3.5 text-[#737577]" />
                       <span className="text-xs text-[#737577] font-medium">{s.customerName}</span>
-                      <span className="text-[11px] text-[#737577]">•</span>
+                      <span className="text-[11px] text-[#737577]">â€¢</span>
                       <span className="text-[11px] text-[#737577]">{s.saleDate}</span>
                     </div>
                   </div>
@@ -236,7 +236,7 @@ export function SalesView({ sales, availableVehicles, customers }: SalesViewProp
                   </div>
 
                   {s.payments.length === 0 ? (
-                    <p className="text-xs text-[#737577] py-2">Sin cobros registrados aún.</p>
+                    <p className="text-xs text-[#737577] py-2">Sin cobros registrados aÃºn.</p>
                   ) : (
                     <div className="space-y-2">
                       {s.payments.map((p) => (
@@ -272,7 +272,7 @@ export function SalesView({ sales, availableVehicles, customers }: SalesViewProp
             <div className="flex items-center justify-between px-6 py-4 border-b border-[#f4f5f6]">
               <div>
                 <h3 className="font-bold text-[#131517] text-base">Cerrar Nueva Venta</h3>
-                <p className="text-xs text-[#737577]">El vehículo pasará a VENDIDO automáticamente.</p>
+                <p className="text-xs text-[#737577]">El vehÃ­culo pasarÃ¡ a VENDIDO automÃ¡ticamente.</p>
               </div>
               <button onClick={() => setShowNewSaleModal(false)} className="text-[#737577] hover:text-[#131517] p-1.5 rounded-full hover:bg-[#f4f5f6]">
                 <X className="w-5 h-5" />
@@ -281,7 +281,7 @@ export function SalesView({ sales, availableVehicles, customers }: SalesViewProp
 
             <form onSubmit={handleSaleSubmit} className="p-6 space-y-4 text-xs">
               <div>
-                <label className="block font-semibold text-[#131517] mb-1">Vehículo Disponible *</label>
+                <label className="block font-semibold text-[#131517] mb-1">VehÃ­culo Disponible *</label>
                 <select
                   name="vehicleId"
                   required
@@ -289,9 +289,9 @@ export function SalesView({ sales, availableVehicles, customers }: SalesViewProp
                   onChange={(e) => handleVehicleSelect(e.target.value)}
                   className="w-full bg-[#f4f5f6] border border-[#b3b5b7]/40 rounded-2xl px-3.5 py-2.5 text-[#131517] font-semibold"
                 >
-                  <option value="">Selecciona vehículo disponible...</option>
+                  <option value="">Selecciona vehÃ­culo disponible...</option>
                   {availableVehicles.map((v) => (
-                    <option key={v.id} value={v.id}>{v.name} — {formatCurrencyRD(v.salePrice)}</option>
+                    <option key={v.id} value={v.id}>{v.name} â€” {formatCurrencyRD(v.salePrice)}</option>
                   ))}
                 </select>
               </div>
@@ -338,12 +338,12 @@ export function SalesView({ sales, availableVehicles, customers }: SalesViewProp
 
               <div className="grid grid-cols-2 gap-3">
                 <div>
-                  <label className="block font-semibold text-[#131517] mb-1">Método del Inicial</label>
+                  <label className="block font-semibold text-[#131517] mb-1">MÃ©todo del Inicial</label>
                   <select name="paymentMethod" className="w-full bg-[#f4f5f6] border border-[#b3b5b7]/40 rounded-2xl px-3 py-2.5 text-[#131517]">
                     <option value="Transferencia">Transferencia bancaria</option>
                     <option value="Efectivo">Efectivo</option>
                     <option value="Cheque">Cheque certificado</option>
-                    <option value="Depósito">Depósito bancario</option>
+                    <option value="DepÃ³sito">DepÃ³sito bancario</option>
                   </select>
                 </div>
                 <div>
@@ -364,7 +364,7 @@ export function SalesView({ sales, availableVehicles, customers }: SalesViewProp
                 </button>
                 <button type="submit" disabled={loading}
                   className="flex-1 py-3 rounded-[19px] bg-[#cc62d5] hover:bg-[#ba4bc4] text-white font-bold disabled:opacity-50 flex items-center justify-center gap-2 cursor-pointer shadow-sm">
-                  {loading ? <><Loader2 className="w-4 h-4 animate-spin" /> Procesando...</> : "Confirmar Venta"}
+                  {loading ? <><Loader2 className="w-4 h-4 animate-spin" /> Guardando...</> : "Registrar Venta"}
                 </button>
               </div>
             </form>
@@ -379,7 +379,7 @@ export function SalesView({ sales, availableVehicles, customers }: SalesViewProp
             <div className="flex items-center justify-between px-6 py-4 border-b border-[#f4f5f6]">
               <div>
                 <h3 className="font-bold text-[#131517] text-base">Registrar Cobro / Abono</h3>
-                <p className="text-xs text-[#737577]">{paymentModalSale.vehicleName} — {paymentModalSale.customerName}</p>
+                <p className="text-xs text-[#737577]">{paymentModalSale.vehicleName} â€” {paymentModalSale.customerName}</p>
               </div>
               <button onClick={() => setPaymentModalSale(null)} className="text-[#737577] hover:text-[#131517] p-1.5 rounded-full hover:bg-[#f4f5f6]">
                 <X className="w-5 h-5" />
@@ -404,11 +404,11 @@ export function SalesView({ sales, availableVehicles, customers }: SalesViewProp
 
               <div className="grid grid-cols-2 gap-3">
                 <div>
-                  <label className="block font-semibold text-[#131517] mb-1">Método</label>
+                  <label className="block font-semibold text-[#131517] mb-1">MÃ©todo</label>
                   <select name="method" className="w-full bg-[#f4f5f6] border border-[#b3b5b7]/40 rounded-2xl px-3 py-2.5 text-[#131517]">
                     <option value="Transferencia">Transferencia bancaria</option>
                     <option value="Efectivo">Efectivo</option>
-                    <option value="Depósito">Depósito bancario</option>
+                    <option value="DepÃ³sito">DepÃ³sito bancario</option>
                     <option value="Cheque">Cheque</option>
                   </select>
                 </div>
@@ -430,7 +430,7 @@ export function SalesView({ sales, availableVehicles, customers }: SalesViewProp
                 </button>
                 <button type="submit" disabled={loading}
                   className="flex-1 py-3 rounded-[19px] bg-[#cc62d5] hover:bg-[#ba4bc4] text-white font-bold disabled:opacity-50 flex items-center justify-center gap-2 cursor-pointer shadow-sm">
-                  {loading ? <><Loader2 className="w-4 h-4 animate-spin" /> Aplicando...</> : "Aplicar Cobro"}
+                  {loading ? <><Loader2 className="w-4 h-4 animate-spin" /> Guardando...</> : "Registrar Pago"}
                 </button>
               </div>
             </form>
@@ -440,3 +440,4 @@ export function SalesView({ sales, availableVehicles, customers }: SalesViewProp
     </div>
   );
 }
+

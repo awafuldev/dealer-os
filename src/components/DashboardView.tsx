@@ -94,7 +94,7 @@ export function DashboardView({ data, orgName }: { data: DashboardData; orgName:
             className="inline-flex items-center gap-2 px-4 py-2.5 rounded-[19px] bg-white hover:bg-[#f4f5f6] border border-[#131517] text-[#131517] font-semibold text-xs sm:text-sm transition-all cursor-pointer"
           >
             <Clock className="w-4 h-4" />
-            + Nuevo Lead
+            + Nuevo Prospecto
           </Link>
           <Link
             href="/sales"
@@ -147,10 +147,10 @@ export function DashboardView({ data, orgName }: { data: DashboardData; orgName:
           </div>
         </div>
 
-        {/* Leads Activos */}
+        {/* Prospectos Activos */}
         <div className="bg-white border border-[#b3b5b7]/30 rounded-[28px] sm:rounded-[36px] p-5 sm:p-6 flex flex-col justify-between shadow-2xs">
           <div className="flex items-center justify-between">
-            <span className="text-xs font-semibold text-[#737577]">Leads activos</span>
+            <span className="text-xs font-semibold text-[#737577]">Prospectos activos</span>
             <div className="w-8 h-8 rounded-full bg-[#ec660d]/10 flex items-center justify-center text-[#ec660d]">
               <Clock className="w-4 h-4" />
             </div>
@@ -159,10 +159,10 @@ export function DashboardView({ data, orgName }: { data: DashboardData; orgName:
             <span className="text-3xl sm:text-4xl font-black text-[#131517] tracking-tight">
               {data.counts.activeLeads}
             </span>
-            <span className="text-xs text-[#737577] ml-2 font-medium">prospectos</span>
+            <span className="text-xs text-[#737577] ml-2 font-medium">personas</span>
           </div>
           <div className="mt-3 text-[11px] text-[#737577]">
-            {data.pendingFollowUps.length} en seguimiento directo
+            {data.pendingFollowUps.length} con seguimiento pendiente
           </div>
         </div>
 
@@ -266,16 +266,16 @@ export function DashboardView({ data, orgName }: { data: DashboardData; orgName:
 
       {/* 3. Dos Columnas: Seguimientos Activos & Actividad Reciente */}
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-        {/* Seguimiento de Leads con WhatsApp */}
+        {/* Seguimiento de Prospectos con WhatsApp */}
         <div className="bg-white border border-[#b3b5b7]/30 rounded-[32px] sm:rounded-[40px] p-5 sm:p-7 flex flex-col justify-between shadow-2xs">
           <div>
             <div className="flex items-center justify-between mb-4">
               <div>
-                <h2 className="text-base font-bold text-[#131517]">Seguimiento de Leads</h2>
-                <p className="text-xs text-[#737577]">Prospectos interesados que esperan respuesta</p>
+                <h2 className="text-base font-bold text-[#131517]">Seguimiento de Prospectos</h2>
+                <p className="text-xs text-[#737577]">Personas interesadas que esperan respuesta</p>
               </div>
               <span className="text-xs font-bold text-[#ec660d] bg-[#ec660d]/10 px-2.5 py-1 rounded-full">
-                {data.pendingFollowUps.length} activos
+                {data.pendingFollowUps.length} para hoy
               </span>
             </div>
 

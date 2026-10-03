@@ -1,4 +1,4 @@
-"use client";
+﻿"use client";
 
 import { useState } from "react";
 import {
@@ -13,6 +13,7 @@ interface FinanceData {
   projectedProfit: number;
   salesVolumeTotal: number;
   realizedSalesProfit: number;
+  totalPendingReceivables?: number;
   totalOperatingExpenses: number;
   totalVehicleExpenses: number;
   netProfit: number;
@@ -54,7 +55,7 @@ export function FinanceView({
   };
 
   const handleDeleteExpense = async (id: string) => {
-    if (!confirm("¿Eliminar este gasto operativo?")) return;
+    if (!confirm("Â¿Eliminar este gasto operativo?")) return;
     setLoading(true);
     const form = new FormData();
     form.append("expenseId", id);
@@ -73,13 +74,13 @@ export function FinanceView({
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div>
           <span className="text-xs font-bold text-[#cc62d5] uppercase tracking-wider">
-            Panel Financiero
+            Resumen Financiero
           </span>
           <h1 className="text-2xl sm:text-3xl font-extrabold tracking-tight text-[#131517] mt-0.5">
-            Finanzas &amp; Rentabilidad
+            Dinero
           </h1>
           <p className="text-xs sm:text-sm text-[#737577] mt-1">
-            Consolidación de costos, ventas, gastos operativos y margen neto real.
+            ConsolidaciÃ³n de costos, ventas, gastos operativos y margen neto real.
           </p>
         </div>
         <button
@@ -87,7 +88,7 @@ export function FinanceView({
           className="inline-flex items-center justify-center gap-2 px-4 py-2.5 rounded-[19px] bg-[#cc62d5] hover:bg-[#ba4bc4] text-white font-semibold text-xs sm:text-sm transition-all shadow-sm cursor-pointer"
         >
           <Plus className="w-4 h-4 stroke-[2.5]" />
-          + Gasto Operativo
+          Registrar Gasto Fijo
         </button>
       </div>
 
@@ -106,33 +107,33 @@ export function FinanceView({
         </div>
       )}
 
-      {/* KPI Cards */}
+      {/* KPI Cards con lenguaje ultra claro y humano */}
       <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
         <div className="bg-white border border-[#b3b5b7]/30 rounded-[28px] p-5 shadow-2xs">
           <div className="flex items-center justify-between mb-3">
-            <span className="text-xs font-semibold text-[#737577]">Capital en Patio</span>
+            <span className="text-xs font-semibold text-[#737577]">Lo que me costÃ³</span>
             <Wallet className="w-4 h-4 text-[#b3b5b7]" />
           </div>
           <p className="text-xl font-black text-[#131517] tracking-tight">{formatCurrencyRD(data.investedInventory)}</p>
-          <p className="text-[11px] text-[#737577] mt-1">Compra + adecuación activa</p>
+          <p className="text-[11px] text-[#737577] mt-1">Costo real invertido en patio</p>
         </div>
 
         <div className="bg-white border border-[#cc62d5]/30 rounded-[28px] p-5 shadow-2xs">
           <div className="flex items-center justify-between mb-3">
-            <span className="text-xs font-semibold text-[#cc62d5]">Margen Realizado</span>
+            <span className="text-xs font-semibold text-[#cc62d5]">Lo que ganÃ©</span>
             <DollarSign className="w-4 h-4 text-[#cc62d5]" />
           </div>
           <p className="text-xl font-black text-[#cc62d5] tracking-tight">{formatCurrencyRD(data.realizedSalesProfit)}</p>
-          <p className="text-[11px] text-[#737577] mt-1">Ventas ({formatCurrencyRD(data.salesVolumeTotal)}) − Costos</p>
+          <p className="text-[11px] text-[#737577] mt-1">Ganancia en ventas cerradas</p>
         </div>
 
         <div className="bg-white border border-[#b3b5b7]/30 rounded-[28px] p-5 shadow-2xs">
           <div className="flex items-center justify-between mb-3">
-            <span className="text-xs font-semibold text-[#737577]">Gastos Operativos</span>
+            <span className="text-xs font-semibold text-[#737577]">Lo que me deben</span>
             <Building className="w-4 h-4 text-[#ec660d]" />
           </div>
-          <p className="text-xl font-black text-[#ec660d] tracking-tight">{formatCurrencyRD(data.totalOperatingExpenses)}</p>
-          <p className="text-[11px] text-[#737577] mt-1">Local, nómina, marketing</p>
+          <p className="text-xl font-black text-[#ec660d] tracking-tight">{formatCurrencyRD(data.totalPendingReceivables || 0)}</p>
+          <p className="text-[11px] text-[#737577] mt-1">Saldos pendientes de cobrar</p>
         </div>
 
         <div className={`bg-white border rounded-[28px] p-5 shadow-2xs ${
@@ -140,31 +141,31 @@ export function FinanceView({
         }`}>
           <div className="flex items-center justify-between mb-3">
             <span className={`text-xs font-semibold ${data.netProfit >= 0 ? "text-[#cc62d5]" : "text-[#e83b47]"}`}>
-              Margen Neto
+              Ganancia de bolsillo
             </span>
             <TrendingUp className={`w-4 h-4 ${data.netProfit >= 0 ? "text-[#cc62d5]" : "text-[#e83b47]"}`} />
           </div>
           <p className={`text-xl font-black tracking-tight ${data.netProfit >= 0 ? "text-[#cc62d5]" : "text-[#e83b47]"}`}>
             {formatCurrencyRD(data.netProfit)}
           </p>
-          <p className="text-[11px] text-[#737577] mt-1">Margen − Gastos operativos</p>
+          <p className="text-[11px] text-[#737577] mt-1">Ganancia neta tras pagar gastos fijos</p>
         </div>
       </div>
 
       {/* Two-column: vehicle expenses + operating expenses */}
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-        {/* Gastos en Vehículos */}
+        {/* Gastos en VehÃ­culos */}
         <div className="bg-white border border-[#b3b5b7]/30 rounded-[32px] sm:rounded-[40px] p-6 shadow-2xs">
           <div className="flex items-center justify-between mb-1">
-            <h2 className="text-sm font-bold text-[#131517]">Gastos en Vehículos</h2>
+            <h2 className="text-sm font-bold text-[#131517]">Gastos en VehÃ­culos</h2>
             <span className="text-xs font-black text-[#cc62d5] font-mono">{formatCurrencyRD(data.totalVehicleExpenses)}</span>
           </div>
-          <p className="text-xs text-[#737577] mb-5">Mecánica, pintura, gomas, traspaso — costos directos de adecuación.</p>
+          <p className="text-xs text-[#737577] mb-5">MecÃ¡nica, pintura, gomas, traspaso â€” costos directos de adecuaciÃ³n.</p>
 
           {data.vehicleExpensesBreakdown.length === 0 ? (
             <div className="text-center py-10 border border-dashed border-[#b3b5b7]/40 rounded-2xl">
-              <p className="text-xs text-[#737577]">Sin gastos en vehículos aún.</p>
-              <p className="text-[11px] text-[#b3b5b7] mt-1">Agrega gastos desde el expediente de cada vehículo.</p>
+              <p className="text-xs text-[#737577]">Sin gastos en vehÃ­culos aÃºn.</p>
+              <p className="text-[11px] text-[#b3b5b7] mt-1">Agrega gastos desde el expediente de cada vehÃ­culo.</p>
             </div>
           ) : (
             <div className="space-y-2">
@@ -184,7 +185,7 @@ export function FinanceView({
             <h2 className="text-sm font-bold text-[#131517]">Gastos Operativos del Dealer</h2>
             <span className="text-xs font-black text-[#ec660d] font-mono">{formatCurrencyRD(data.totalOperatingExpenses)}</span>
           </div>
-          <p className="text-xs text-[#737577] mb-5">Gastos fijos del negocio: alquiler, nómina, publicidad, servicios.</p>
+          <p className="text-xs text-[#737577] mb-5">Gastos fijos del negocio: alquiler, nÃ³mina, publicidad, servicios.</p>
 
           {data.generalExpensesList.length === 0 ? (
             <div className="text-center py-10 border border-dashed border-[#b3b5b7]/40 rounded-2xl">
@@ -243,10 +244,10 @@ export function FinanceView({
 
             <form onSubmit={handleCreateGeneralExpense} className="p-6 space-y-4 text-xs">
               <div>
-                <label className="block font-semibold text-[#131517] mb-1">Categoría</label>
+                <label className="block font-semibold text-[#131517] mb-1">CategorÃ­a</label>
                 <select name="category" className="w-full bg-[#f4f5f6] border border-[#b3b5b7]/40 rounded-2xl px-3.5 py-2.5 text-[#131517] font-semibold">
                   <option value="Local">Alquiler de local / Patio</option>
-                  <option value="Nómina">Nómina y comisiones</option>
+                  <option value="NÃ³mina">NÃ³mina y comisiones</option>
                   <option value="Marketing">Marketing y publicidad</option>
                   <option value="Servicios">Servicios (Luz, agua, internet)</option>
                   <option value="Mantenimiento local">Mantenimiento y limpieza</option>
@@ -256,7 +257,7 @@ export function FinanceView({
               </div>
 
               <div>
-                <label className="block font-semibold text-[#131517] mb-1">Concepto / Descripción *</label>
+                <label className="block font-semibold text-[#131517] mb-1">Concepto / DescripciÃ³n *</label>
                 <input
                   name="description" required
                   placeholder="Ej. Pago pauta publicitaria Instagram del mes"
@@ -287,7 +288,7 @@ export function FinanceView({
                 <label className="block font-semibold text-[#131517] mb-1">Notas / Comprobante</label>
                 <input
                   name="notes"
-                  placeholder="B01-12345678 o descripción adicional"
+                  placeholder="B01-12345678 o descripciÃ³n adicional"
                   className="w-full bg-[#f4f5f6] border border-[#b3b5b7]/40 rounded-2xl px-3.5 py-2.5 text-[#131517] focus:outline-none focus:border-[#cc62d5]"
                 />
               </div>
@@ -299,7 +300,7 @@ export function FinanceView({
                 </button>
                 <button type="submit" disabled={loading}
                   className="flex-1 py-3 rounded-[19px] bg-[#cc62d5] hover:bg-[#ba4bc4] text-white font-bold disabled:opacity-50 flex items-center justify-center gap-2 cursor-pointer shadow-sm">
-                  {loading ? <><Loader2 className="w-4 h-4 animate-spin" /> Guardando...</> : "Guardar Gasto"}
+                  {loading ? <><Loader2 className="w-4 h-4 animate-spin" /> Guardando...</> : "Registrar Gasto"}
                 </button>
               </div>
             </form>
@@ -309,3 +310,4 @@ export function FinanceView({
     </div>
   );
 }
+

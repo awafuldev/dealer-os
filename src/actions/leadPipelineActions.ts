@@ -68,9 +68,10 @@ export async function addLeadActivityAction(formData: FormData) {
     const leadId = formData.get("leadId") as string;
     const type = (formData.get("type") as string) || "nota";
     const content = (formData.get("content") as string)?.trim();
+    const nextFollowUpRaw = formData.get("nextFollowUp") as string;
 
     if (!leadId || !content) {
-      return { success: false, error: "Contenido requerido." };
+      return { success: false, error: "Escribe qué pasó en el contacto con el prospecto." };
     }
 
     const lead = await prisma.lead.findFirst({
@@ -81,14 +82,30 @@ export async function addLeadActivityAction(formData: FormData) {
       return { success: false, error: "Prospecto no encontrado en tu organización." };
     }
 
-    await prisma.leadActivity.create({
-      data: {
-        leadId,
-        userId: user.id,
-        type,
-        content,
-      },
-    });
+    let nextFollowUp: Date | null = null;
+    if (nextFollowUpRaw) {
+      nextFollowUp = new Date(nextFollowUpRaw);
+      if (isNaN(nextFollowUp.getTime())) nextFollowUp = null;
+    }
+
+    await prisma.$transaction([
+      prisma.leadActivity.create({
+        data: {
+          leadId,
+          userId: user.id,
+          type,
+          content,
+        },
+      }),
+      ...(nextFollowUp
+        ? [
+            prisma.lead.update({
+              where: { id: leadId },
+              data: { nextFollowUp },
+            }),
+          ]
+        : []),
+    ]);
 
     await prisma.auditLog.create({
       data: {
@@ -97,11 +114,12 @@ export async function addLeadActivityAction(formData: FormData) {
         action: "AGREGAR_ACTIVIDAD_LEAD",
         entity: "Lead",
         entityId: leadId,
-        details: `Actividad registrada (${type}): ${content.slice(0, 80)}`,
+        details: `Seguimiento anotado: ${content.slice(0, 80)}`,
       },
     });
 
     revalidatePath("/leads");
+    revalidatePath("/");
     return { success: true };
   } catch (error: any) {
     return { success: false, error: error.message };

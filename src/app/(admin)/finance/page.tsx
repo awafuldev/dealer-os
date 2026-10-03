@@ -40,9 +40,11 @@ export default async function FinancePage() {
 
   let salesVolumeTotal = 0;
   let realizedSalesProfit = 0;
+  let totalPendingReceivables = 0;
 
   sales.forEach((s) => {
     salesVolumeTotal += s.finalPrice;
+    totalPendingReceivables += s.balance || 0;
     const vFin = calculateVehicleFinancials(s.vehicle.purchasePrice, s.vehicle.expenses, s.finalPrice);
     realizedSalesProfit += vFin.grossMargin;
   });
@@ -101,6 +103,7 @@ export default async function FinancePage() {
     totalOperatingExpenses,
     totalVehicleExpenses,
     netProfit,
+    totalPendingReceivables,
     vehicleExpensesBreakdown,
     generalExpensesList,
   };

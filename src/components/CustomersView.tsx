@@ -1,4 +1,4 @@
-"use client";
+﻿"use client";
 
 import { useState } from "react";
 import { Search, Plus, MessageCircle, Phone, Mail, UserCheck, Calendar, DollarSign, X, Edit3, Trash2, Users, CheckCircle2, AlertCircle, ShoppingBag, Clock } from "lucide-react";
@@ -87,7 +87,7 @@ export function CustomersView({ customers, availableVehicles, orgName }: Custome
   };
 
   const handleDeleteCustomer = async (customerId: string) => {
-    if (!confirm("¿Seguro que deseas eliminar este cliente?")) return;
+    if (!confirm("Â¿Eliminar este cliente? No se puede deshacer.")) return;
     setLoading(true);
     const form = new FormData();
     form.append("customerId", customerId);
@@ -110,10 +110,10 @@ export function CustomersView({ customers, availableVehicles, orgName }: Custome
     const res = await createLeadAction(form);
     setLoading(false);
     if (res.success) {
-      setMessage({ type: "success", text: "Oportunidad de lead creada para el cliente." });
+      setMessage({ type: "success", text: "Prospecto registrado correctamente." });
       setLeadModalCustomer(null);
     } else {
-      setMessage({ type: "error", text: res.error || "Error al asociar lead." });
+      setMessage({ type: "error", text: res.error || "No se pudo registrar el prospecto." });
     }
   };
 
@@ -129,7 +129,7 @@ export function CustomersView({ customers, availableVehicles, orgName }: Custome
             Clientes y Compradores
           </h1>
           <p className="text-xs sm:text-sm text-[#737577] mt-1">
-            {customers.length} {customers.length === 1 ? "contacto registrado" : "contactos registrados"} en el CRM.
+            {customers.length} {customers.length === 1 ? "contacto registrado" : "contactos registrados"} en tu dealer.
           </p>
         </div>
 
@@ -210,7 +210,7 @@ export function CustomersView({ customers, availableVehicles, orgName }: Custome
           <Search className="w-4 h-4 text-[#737577] absolute left-3.5 top-1/2 -translate-y-1/2" />
           <input
             type="text"
-            placeholder="Buscar por nombre, teléfono, cédula o correo..."
+            placeholder="Buscar por nombre, telÃ©fono, cÃ©dula o correo..."
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
             className="w-full bg-[#f4f5f6] border border-[#b3b5b7]/30 rounded-2xl pl-10 pr-4 py-2.5 text-xs sm:text-sm text-[#131517] placeholder-[#737577] focus:outline-none focus:border-[#cc62d5] focus:bg-white transition-all"
@@ -223,12 +223,12 @@ export function CustomersView({ customers, availableVehicles, orgName }: Custome
         <div className="text-center py-16 border border-dashed border-[#b3b5b7]/40 rounded-[32px] bg-white p-8">
           <Users className="w-12 h-12 text-[#b3b5b7] mx-auto mb-3" />
           <h3 className="text-base font-bold text-[#131517]">
-            {customers.length === 0 ? "Aún no tienes clientes registrados" : "No se encontraron clientes"}
+            {customers.length === 0 ? "AÃºn no tienes clientes registrados" : "No se encontraron clientes"}
           </h3>
           <p className="text-xs text-[#737577] mt-1 max-w-sm mx-auto">
             {customers.length === 0
               ? "Registra clientes para asociarlos a cotizaciones, ventas y contratos."
-              : "Prueba buscando con otro término."}
+              : "Prueba buscando con otro tÃ©rmino."}
           </p>
           {customers.length === 0 && (
             <button
@@ -244,7 +244,7 @@ export function CustomersView({ customers, availableVehicles, orgName }: Custome
           {filtered.map((c) => {
             const waUrl = buildWhatsAppLink(
               c.whatsapp,
-              `Hola ${c.name}, le escribimos de ${orgName}. ¿En qué podemos asistirle hoy?`
+              `Hola ${c.name}, le escribimos de ${orgName}. Â¿En quÃ© podemos asistirle hoy?`
             );
 
             return (
@@ -278,7 +278,7 @@ export function CustomersView({ customers, availableVehicles, orgName }: Custome
                   <div className="mt-4 pt-3 border-t border-[#f4f5f6] space-y-2 text-xs">
                     {c.cedulaOrRnc && (
                       <div className="flex justify-between text-[#737577]">
-                        <span>Cédula / RNC:</span>
+                        <span>CÃ©dula / RNC:</span>
                         <span className="font-mono font-bold text-[#131517]">{c.cedulaOrRnc}</span>
                       </div>
                     )}
@@ -316,7 +316,7 @@ export function CustomersView({ customers, availableVehicles, orgName }: Custome
                     onClick={() => setLeadModalCustomer(c)}
                     className="text-xs font-semibold text-[#cc62d5] hover:underline cursor-pointer"
                   >
-                    + Crear Lead
+                    + Registrar interés
                   </button>
 
                   <div className="flex items-center gap-1">
@@ -378,7 +378,7 @@ export function CustomersView({ customers, availableVehicles, orgName }: Custome
                   />
                 </div>
                 <div>
-                  <label className="block font-semibold text-[#131517] mb-1">Cédula o RNC</label>
+                  <label className="block font-semibold text-[#131517] mb-1">CÃ©dula o RNC</label>
                   <input
                     name="cedulaOrRnc"
                     placeholder="001-XXXXXXX-X"
@@ -389,7 +389,7 @@ export function CustomersView({ customers, availableVehicles, orgName }: Custome
 
               <div className="grid grid-cols-2 gap-3">
                 <div>
-                  <label className="block font-semibold text-[#131517] mb-1">Teléfono Alterno</label>
+                  <label className="block font-semibold text-[#131517] mb-1">TelÃ©fono Alterno</label>
                   <input
                     name="phone"
                     placeholder="8095550000"
@@ -408,7 +408,7 @@ export function CustomersView({ customers, availableVehicles, orgName }: Custome
               </div>
 
               <div>
-                <label className="block font-semibold text-[#131517] mb-1">Correo Electrónico</label>
+                <label className="block font-semibold text-[#131517] mb-1">Correo ElectrÃ³nico</label>
                 <input
                   name="email"
                   type="email"
@@ -477,7 +477,7 @@ export function CustomersView({ customers, availableVehicles, orgName }: Custome
                   />
                 </div>
                 <div>
-                  <label className="block font-semibold text-[#131517] mb-1">Cédula o RNC</label>
+                  <label className="block font-semibold text-[#131517] mb-1">CÃ©dula o RNC</label>
                   <input
                     name="cedulaOrRnc"
                     defaultValue={editingCustomer.cedulaOrRnc || ""}
@@ -488,7 +488,7 @@ export function CustomersView({ customers, availableVehicles, orgName }: Custome
 
               <div className="grid grid-cols-2 gap-3">
                 <div>
-                  <label className="block font-semibold text-[#131517] mb-1">Teléfono Alterno</label>
+                  <label className="block font-semibold text-[#131517] mb-1">TelÃ©fono Alterno</label>
                   <input
                     name="phone"
                     defaultValue={editingCustomer.phone || ""}
@@ -507,7 +507,7 @@ export function CustomersView({ customers, availableVehicles, orgName }: Custome
               </div>
 
               <div>
-                <label className="block font-semibold text-[#131517] mb-1">Correo Electrónico</label>
+                <label className="block font-semibold text-[#131517] mb-1">Correo ElectrÃ³nico</label>
                 <input
                   name="email"
                   type="email"
@@ -540,14 +540,14 @@ export function CustomersView({ customers, availableVehicles, orgName }: Custome
         </div>
       )}
 
-      {/* Modal: Crear Lead para este Cliente */}
+      {/* Modal: Registrar Interés para este Cliente */}
       {leadModalCustomer && (
         <div className="fixed inset-0 z-50 bg-[#131517]/40 backdrop-blur-xs flex items-center justify-center p-4">
           <div className="bg-white border border-[#b3b5b7]/30 rounded-[32px] sm:rounded-[40px] w-full max-w-md overflow-hidden shadow-2xl animate-in fade-in zoom-in-95 duration-200">
             <div className="flex items-center justify-between px-6 py-4 border-b border-[#f4f5f6]">
               <div>
-                <h3 className="font-bold text-[#131517] text-base">Crear Lead para {leadModalCustomer.name}</h3>
-                <p className="text-xs text-[#737577]">Asocia un vehículo de interés</p>
+                <h3 className="font-bold text-[#131517] text-base">Registrar Interés para {leadModalCustomer.name}</h3>
+                <p className="text-xs text-[#737577]">Asocia un vehÃ­culo de interÃ©s</p>
               </div>
               <button
                 onClick={() => setLeadModalCustomer(null)}
@@ -559,12 +559,12 @@ export function CustomersView({ customers, availableVehicles, orgName }: Custome
 
             <form onSubmit={handleLeadSubmit} className="p-6 space-y-4 text-xs">
               <div>
-                <label className="block font-semibold text-[#131517] mb-1">Vehículo de Interés</label>
+                <label className="block font-semibold text-[#131517] mb-1">VehÃ­culo de InterÃ©s</label>
                 <select
                   name="vehicleId"
                   className="w-full bg-[#f4f5f6] border border-[#b3b5b7]/40 rounded-2xl px-3.5 py-2.5 text-[#131517]"
                 >
-                  <option value="">Interés general (sin vehículo específico)</option>
+                  <option value="">InterÃ©s general (sin vehÃ­culo especÃ­fico)</option>
                   {availableVehicles.map((v) => (
                     <option key={v.id} value={v.id}>
                       {v.name}
@@ -584,7 +584,7 @@ export function CustomersView({ customers, availableVehicles, orgName }: Custome
                     <option value="NUEVO">Nuevo</option>
                     <option value="CONTACTADO">Contactado</option>
                     <option value="INTERESADO">Interesado</option>
-                    <option value="NEGOCIACION">Negociación</option>
+                    <option value="NEGOCIACION">NegociaciÃ³n</option>
                   </select>
                 </div>
                 <div>
@@ -617,7 +617,7 @@ export function CustomersView({ customers, availableVehicles, orgName }: Custome
                   disabled={loading}
                   className="w-full py-3 rounded-[19px] bg-[#cc62d5] hover:bg-[#ba4bc4] text-white font-semibold text-xs shadow-sm cursor-pointer disabled:opacity-50"
                 >
-                  {loading ? "Creando lead..." : "Crear Oportunidad"}
+                  {loading ? "Guardando..." : "Registrar InterÃ©s"}
                 </button>
               </div>
             </form>
@@ -627,3 +627,4 @@ export function CustomersView({ customers, availableVehicles, orgName }: Custome
     </div>
   );
 }
+
