@@ -79,14 +79,31 @@ export function PublicFooter({ org, settings }: { org: OrgLike; settings: Public
       </div>
 
       <div className="border-t border-white/10 py-5">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 flex flex-col sm:flex-row items-center justify-center gap-x-2 gap-y-1.5 text-xs text-zinc-600 text-center">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 flex flex-col sm:flex-row items-center justify-between gap-4 text-xs text-zinc-600">
           <span>© {year} {org.name}. Todos los derechos reservados.</span>
-          <span className="hidden sm:inline text-zinc-800">·</span>
-          <span>Desarrollado por Cetu Studios</span>
-          <span className="hidden sm:inline text-zinc-800">·</span>
-          <Link href="/login" className="text-zinc-700 hover:text-zinc-400 transition-colors">
-            Acceso administrativo
-          </Link>
+
+          <div className="flex items-center gap-4">
+            <Link href="/login" className="text-zinc-700 hover:text-zinc-400 transition-colors">
+              Acceso administrativo
+            </Link>
+
+            {/* CETU STUDIOS Credit Badge */}
+            <div className="flex items-center gap-2.5 px-3.5 py-1.5 rounded-full bg-white/5 border border-white/10 hover:border-white/25 transition-all duration-300 group">
+              <span className="text-[11px] text-zinc-400 tracking-wider uppercase font-medium">
+                Hecho por
+              </span>
+              <div className="flex items-center gap-1.5">
+                <img
+                  src="/cetu-studios.png"
+                  alt="CETU Studios"
+                  className="h-5 w-auto object-contain brightness-125 group-hover:scale-110 transition-transform duration-300"
+                />
+                <span className="text-white font-bold tracking-wider text-[11px] group-hover:text-[#F5B301] transition-colors">
+                  CETU STUDIOS
+                </span>
+              </div>
+            </div>
+          </div>
         </div>
       </div>
     </footer>
