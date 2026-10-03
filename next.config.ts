@@ -1,10 +1,8 @@
 import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
-  env: {
-    DATABASE_URL: process.env.DATABASE_URL || "file:./dev.db",
-    JWT_SECRET: process.env.JWT_SECRET || "dealer_os_super_secret_jwt_key_rd_2026",
-  },
+  // Las variables de entorno de servidor se leen dinámicamente de process.env en runtime
+  // para evitar incrustar secretos o fallbacks estáticos en el bundle del cliente.
 };
 
 export default nextConfig;

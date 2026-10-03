@@ -1,12 +1,12 @@
-import { writeFile, mkdir, unlink, readFile } from "fs/promises";
+﻿import { writeFile, mkdir, unlink, readFile } from "fs/promises";
 import path from "path";
 import crypto from "crypto";
 
-// Directorio público para fotos de vehículos (públicas para el showroom)
+// Directorio pÃºblico para fotos de vehÃ­culos (pÃºblicas para el showroom)
 const VEHICLE_UPLOAD_ROOT = path.join(process.cwd(), "public", "uploads", "vehicles");
 
-// Directorio privado para documentos sensibles (contratos, cédulas, recibos).
-// Permite sobreescritura con UPLOAD_DIR para volúmenes persistentes en Railway (ej: /data/private)
+// Directorio privado para documentos sensibles (contratos, cÃ©dulas, recibos).
+// Permite sobreescritura con UPLOAD_DIR para volÃºmenes persistentes en Railway (ej: /data/private)
 const PRIVATE_STORAGE_DIR = process.env.UPLOAD_DIR
   ? path.resolve(process.env.UPLOAD_DIR)
   : path.join(process.cwd(), "storage", "private");
@@ -50,7 +50,7 @@ export async function saveVehicleImageFile(vehicleId: string, file: File): Promi
   const filename = `${crypto.randomUUID()}${ext}`;
   const dir = path.join(VEHICLE_UPLOAD_ROOT, vehicleId);
   await mkdir(dir, { recursive: true });
-  await writeFile(path.join(dir, filename), bytes);
+  await writeFile(path.join(/*turbopackIgnore: true*/ dir, filename), bytes);
   return `/uploads/vehicles/${vehicleId}/${filename}`;
 }
 
@@ -65,7 +65,7 @@ export async function deleteVehicleImageFile(url: string): Promise<void> {
 }
 
 /**
- * Guarda un documento sensible en almacenamiento PRIVADO (no accesible vía HTTP estático).
+ * Guarda un documento sensible en almacenamiento PRIVADO (no accesible vÃ­a HTTP estÃ¡tico).
  * Retorna un identificador seguro para ser servido por /api/documents/[id].
  */
 export async function saveDocumentFile(
@@ -77,7 +77,7 @@ export async function saveDocumentFile(
   const filename = `${crypto.randomUUID()}${ext}`;
   const dir = path.join(PRIVATE_STORAGE_DIR, orgId);
   await mkdir(dir, { recursive: true });
-  await writeFile(path.join(dir, filename), bytes);
+  await writeFile(path.join(/*turbopackIgnore: true*/ dir, filename), bytes);
 
   // Clave relativa de almacenamiento privado
   const storageKey = `${orgId}/${filename}`;
@@ -108,3 +108,4 @@ export async function deleteDocumentFile(storageKey: string): Promise<void> {
     // Si no existe en disco, ignorar
   }
 }
+

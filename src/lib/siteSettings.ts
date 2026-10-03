@@ -10,9 +10,14 @@ import { getDefaultOrganization } from "@/lib/tenant";
 export async function getPublicSiteData() {
   const org = await getDefaultOrganization();
 
-  const settings = await prisma.siteSettings.findUnique({
-    where: { organizationId: org.id },
-  });
+  let settings: Awaited<ReturnType<typeof prisma.siteSettings.findUnique>> = null;
+  try {
+    settings = await prisma.siteSettings.findUnique({
+      where: { organizationId: org.id },
+    });
+  } catch {
+    settings = null;
+  }
 
   return {
     org,

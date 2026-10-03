@@ -34,11 +34,16 @@ export async function generateMetadata(): Promise<Metadata> {
 export default async function ShowroomPage() {
   const { org, settings } = await getPublicSiteData();
 
-  const vehiclesDb = await prisma.vehicle.findMany({
-    where: { organizationId: org.id, isPublished: true },
-    include: { images: { orderBy: { order: "asc" } } },
-    orderBy: { createdAt: "desc" },
-  });
+  let vehiclesDb: any[] = [];
+  try {
+    vehiclesDb = await prisma.vehicle.findMany({
+      where: { organizationId: org.id, isPublished: true },
+      include: { images: { orderBy: { order: "asc" } } },
+      orderBy: { createdAt: "desc" },
+    });
+  } catch {
+    vehiclesDb = [];
+  }
 
   const vehicles = vehiclesDb.map(toPublicVehicle);
   const featuredVehicle = vehicles.find((v) => v.featuredOnHome) || vehicles[0] || null;
