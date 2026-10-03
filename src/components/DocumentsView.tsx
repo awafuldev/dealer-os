@@ -266,7 +266,7 @@ export function DocumentsView({ documents, sales, customers, vehicles }: Documen
 
                     {doc.fileUrl ? (
                       <a
-                        href={doc.fileUrl}
+                        href={`/api/documents/${doc.id}`}
                         target="_blank"
                         rel="noopener noreferrer"
                         className="p-1.5 rounded-full hover:bg-[#f4f5f6] text-[#cc62d5] transition-colors"

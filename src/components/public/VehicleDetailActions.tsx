@@ -13,7 +13,7 @@ export function VehicleDetailActions({ vehicle, whatsapp }: VehicleDetailActions
   const waLink = whatsapp
     ? buildWhatsAppLink(
         whatsapp,
-        `Hola, estoy interesado en el ${vehicle.brand} ${vehicle.model} ${vehicle.year} publicado en Kiry Auto.`
+        `Hola, estoy interesado en el ${vehicle.brand} ${vehicle.model} ${vehicle.year}.`
       )
     : null;
 

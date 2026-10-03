@@ -23,8 +23,8 @@ export function PublicContactModal({ vehicle, label, variant = "outline", classN
   const [status, setStatus] = useState<{ type: "success" | "error"; text: string } | null>(null);
 
   const defaultMessage = vehicle
-    ? `Hola, me interesa el ${vehicle.brand} ${vehicle.model} ${vehicle.year} publicado en Kiry Auto. ¿Podrían darme más información?`
-    : "Hola, me gustaría recibir más información sobre el inventario disponible en Kiry Auto.";
+    ? `Hola, me interesa el ${vehicle.brand} ${vehicle.model} ${vehicle.year}. ¿Podrían darme más información?`
+    : "Hola, me gustaría recibir más información sobre el inventario disponible.";
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -40,7 +40,7 @@ export function PublicContactModal({ vehicle, label, variant = "outline", classN
     if (res.success) {
       setStatus({
         type: "success",
-        text: "Solicitud enviada. Un asesor de Kiry Auto te contactará en breve.",
+        text: "Solicitud enviada. Un asesor del dealer te contactará en breve.",
       });
       setTimeout(() => {
         setIsOpen(false);

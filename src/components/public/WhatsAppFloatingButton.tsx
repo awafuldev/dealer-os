@@ -18,7 +18,7 @@ export function WhatsAppFloatingButton({ whatsapp }: { whatsapp: string | null }
 
   if (!whatsapp) return null;
 
-  const link = buildWhatsAppLink(whatsapp, "Hola, quisiera más información sobre un vehículo de Kiry Auto.");
+  const link = buildWhatsAppLink(whatsapp, "Hola, quisiera más información sobre sus vehículos disponibles.");
 
   return (
     <>

@@ -7,7 +7,7 @@ export default function VehicleNotFound() {
       <CarFront className="w-12 h-12 text-zinc-600 mx-auto mb-5" />
       <h1 className="text-2xl font-bold text-white">Este vehículo ya no está disponible</h1>
       <p className="text-sm text-zinc-500 mt-2 max-w-md mx-auto">
-        Puede que ya se haya vendido o que el enlace esté desactualizado. Revisa el inventario actual de Kiry Auto.
+        Puede que ya se haya vendido o que el enlace esté desactualizado. Revisa nuestro inventario actual de vehículos disponibles.
       </p>
       <Link
         href="/showroom#inventario"

@@ -4,8 +4,8 @@ import type { PublicSiteSettings } from "@/lib/siteSettings";
 export function InstagramSection({ settings }: { settings: PublicSiteSettings }) {
   if (!settings.instagramHandle && !settings.instagramUrl) return null;
 
-  const handle = settings.instagramHandle || "@kiryauto";
-  const url = settings.instagramUrl || `https://instagram.com/${handle.replace("@", "")}`;
+  const handle = settings.instagramHandle || "@dealer";
+  const url = settings.instagramUrl || (settings.instagramHandle ? `https://instagram.com/${handle.replace("@", "")}` : "#");
 
   return (
     <section id="instagram" className="max-w-7xl mx-auto px-4 sm:px-6 py-20 border-t border-white/10 scroll-mt-24">

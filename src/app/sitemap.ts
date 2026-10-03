@@ -3,7 +3,7 @@ import { prisma } from "@/lib/prisma";
 import { getDefaultOrganization } from "@/lib/tenant";
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
-  const baseUrl = process.env.SITE_URL || "https://kiryauto.com";
+  const baseUrl = process.env.SITE_URL || "https://dealer-os.up.railway.app";
 
   try {
     const org = await getDefaultOrganization();

@@ -21,12 +21,33 @@ export async function createDocumentAction(formData: FormData) {
       return { success: false, error: "El título o descripción del documento es obligatorio." };
     }
 
+    if (customerId) {
+      const custExists = await prisma.customer.findFirst({
+        where: { id: customerId, organizationId: org.id },
+      });
+      if (!custExists) return { success: false, error: "El cliente especificado no pertenece a tu organización." };
+    }
+
+    if (vehicleId) {
+      const vehExists = await prisma.vehicle.findFirst({
+        where: { id: vehicleId, organizationId: org.id },
+      });
+      if (!vehExists) return { success: false, error: "El vehículo especificado no pertenece a tu organización." };
+    }
+
+    if (saleId) {
+      const saleExists = await prisma.sale.findFirst({
+        where: { id: saleId, organizationId: org.id },
+      });
+      if (!saleExists) return { success: false, error: "La venta especificada no pertenece a tu organización." };
+    }
+
     let fileUrl: string | null = null;
     let fileSize: number | null = null;
 
     if (file && file.size > 0) {
       const uploadRes = await saveDocumentFile(org.id, file);
-      fileUrl = uploadRes.url;
+      fileUrl = uploadRes.storageKey;
       fileSize = uploadRes.size;
     }
 

@@ -27,7 +27,7 @@ export function TestDriveSection({
   const [status, setStatus] = useState<{ type: "success" | "error"; text: string } | null>(null);
 
   const waLink = whatsapp
-    ? buildWhatsAppLink(whatsapp, "Hola, quisiera agendar una cita para ver un vehículo de Kiry Auto.")
+    ? buildWhatsAppLink(whatsapp, "Hola, quisiera agendar una cita para ver un vehículo de su inventario.")
     : null;
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {

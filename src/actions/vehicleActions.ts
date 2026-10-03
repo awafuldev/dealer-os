@@ -181,6 +181,8 @@ export async function deleteVehicleAction(formData: FormData) {
       include: {
         images: true,
         sales: true,
+        reservations: true,
+        documents: true,
       },
     });
 
@@ -197,15 +199,52 @@ export async function deleteVehicleAction(formData: FormData) {
       };
     }
 
-    // Eliminar archivos físicos de imágenes
+    // Regla de Integridad: No eliminar si tiene reservas activas o con dinero recibido
+    const activeReservations = vehicle.reservations.filter((r) => r.status === "CONFIRMADA" || r.amount > 0);
+    if (activeReservations.length > 0) {
+      return {
+        success: false,
+        error:
+          "Este vehículo tiene una reserva activa o fondos recibidos en reserva. Debes cancelar o liquidar la reserva antes de eliminarlo, o puedes simplemente despublicarlo del showroom.",
+      };
+    }
+
+    // Regla de Integridad: Si tiene documentos legales/técnicos asociados
+    if (vehicle.documents.length > 0) {
+      return {
+        success: false,
+        error:
+          "Este vehículo tiene documentos registrados asociados. Para preservar el archivo digital, retira primero los documentos o despublica la unidad.",
+      };
+    }
+
+    // Transacción atómica de eliminación segura
+    await prisma.$transaction(async (tx) => {
+      // Eliminar gastos de vehículo
+      await tx.vehicleExpense.deleteMany({
+        where: { vehicleId },
+      });
+
+      // Eliminar imágenes
+      await tx.vehicleImage.deleteMany({
+        where: { vehicleId },
+      });
+
+      // Eliminar reservas sin monto/canceladas si quedaran
+      await tx.reservation.deleteMany({
+        where: { vehicleId },
+      });
+
+      // Eliminar vehículo
+      await tx.vehicle.delete({
+        where: { id: vehicleId },
+      });
+    });
+
+    // Eliminar archivos físicos de imágenes después de la transacción
     for (const img of vehicle.images) {
       await deleteVehicleImageFile(img.url);
     }
-
-    // Eliminar vehículo (las relaciones dependientes como VehicleImage y VehicleExpense se eliminan en cascada)
-    await prisma.vehicle.delete({
-      where: { id: vehicleId },
-    });
 
     await prisma.auditLog.create({
       data: {

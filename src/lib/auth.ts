@@ -9,7 +9,14 @@ export const SESSION_COOKIE = "dealer_os_session";
 const SESSION_MAX_AGE_SECONDS = 60 * 60 * 24 * 7; // 7 días
 
 function getJwtSecret(): string {
-  return process.env.JWT_SECRET || "dealer_os_super_secret_jwt_key_rd_2026";
+  const secret = process.env.JWT_SECRET;
+  if (!secret) {
+    if (process.env.NODE_ENV === "production") {
+      throw new Error("ERROR DE SEGURIDAD CRÍTICO: La variable de entorno JWT_SECRET es obligatoria en producción.");
+    }
+    return "dev_dealer_os_jwt_secret_must_be_set_in_production_min32chars";
+  }
+  return secret;
 }
 
 interface SessionPayload {

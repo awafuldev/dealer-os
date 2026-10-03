@@ -14,8 +14,8 @@ export async function updateLeadStageAction(formData: FormData) {
       return { success: false, error: "Datos de etapa incompletos." };
     }
 
-    const lead = await prisma.lead.findUnique({
-      where: { id: leadId },
+    const lead = await prisma.lead.findFirst({
+      where: { id: leadId, organizationId: org.id },
       include: { customer: true, vehicle: true },
     });
 
@@ -36,6 +36,7 @@ export async function updateLeadStageAction(formData: FormData) {
     await prisma.leadActivity.create({
       data: {
         leadId,
+        userId: user.id,
         type: "cambio_etapa",
         content: `Etapa actualizada a ${newStage}`,
       },
@@ -63,19 +64,40 @@ export async function updateLeadStageAction(formData: FormData) {
 
 export async function addLeadActivityAction(formData: FormData) {
   try {
+    const { user, org } = await requireSession();
     const leadId = formData.get("leadId") as string;
     const type = (formData.get("type") as string) || "nota";
-    const content = formData.get("content") as string;
+    const content = (formData.get("content") as string)?.trim();
 
     if (!leadId || !content) {
       return { success: false, error: "Contenido requerido." };
     }
 
+    const lead = await prisma.lead.findFirst({
+      where: { id: leadId, organizationId: org.id },
+    });
+
+    if (!lead) {
+      return { success: false, error: "Prospecto no encontrado en tu organización." };
+    }
+
     await prisma.leadActivity.create({
       data: {
         leadId,
+        userId: user.id,
         type,
         content,
+      },
+    });
+
+    await prisma.auditLog.create({
+      data: {
+        organizationId: org.id,
+        userId: user.id,
+        action: "AGREGAR_ACTIVIDAD_LEAD",
+        entity: "Lead",
+        entityId: leadId,
+        details: `Actividad registrada (${type}): ${content.slice(0, 80)}`,
       },
     });
 

@@ -52,7 +52,6 @@ export function LoginForm() {
             required
             autoComplete="username"
             autoFocus
-            placeholder="admin o admin@dealer.com"
             className="w-full bg-[#f4f5f6] border border-[#b3b5b7]/40 rounded-2xl pl-10 pr-3 py-3 text-sm text-[#131517] placeholder-[#737577] focus:outline-none focus:border-[#cc62d5] focus:bg-white transition-all"
           />
         </div>
