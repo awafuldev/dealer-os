@@ -246,7 +246,7 @@ export function LeadsPipelineView({
             <span className="text-[10px] font-bold text-[#737577] uppercase tracking-wider block mb-1.5">
               Estado:
             </span>
-            <div className="flex items-center gap-1.5 overflow-x-auto pb-1 scrollbar-none">
+            <div className="flex flex-wrap items-center gap-1.5">
               {ORDERED_STAGES.map((st) => {
                 const isActive = lead.stage === st.key;
                 return (

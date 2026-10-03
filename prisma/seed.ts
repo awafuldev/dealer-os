@@ -57,7 +57,7 @@ async function main() {
         phone:     dealerPhone    || null,
         whatsapp:  dealerWhatsapp || null,
         email:     dealerEmail    || null,
-        logo:      "/logo.png",
+        logo:      null,
         siteSettings: {
           create: {
             heroHeadline:    "Tu próximo vehículo, con total confianza",

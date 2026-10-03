@@ -8,6 +8,8 @@
     "start": "next start",
     "lint": "eslint",
     "seed": "tsx prisma/seed.ts",
+    "seed:demo": "tsx prisma/seed-demo.ts",
+    "fix:logo": "tsx prisma/fix-logo.ts",
     "postinstall": "prisma generate"
   },
   "engines": {
