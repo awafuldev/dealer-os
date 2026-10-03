@@ -34,13 +34,24 @@ export function CustomersView({ customers, availableVehicles, orgName }: Custome
   const [loading, setLoading] = useState(false);
   const [message, setMessage] = useState<{ type: "success" | "error"; text: string } | null>(null);
 
+  const [activeFilterTab, setActiveFilterTab] = useState<"todos" | "clientes" | "prospectos">("todos");
+
   const filtered = customers.filter((c) => {
-    return (
+    const matchesSearch =
       c.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
       c.whatsapp.includes(searchTerm) ||
       (c.cedulaOrRnc && c.cedulaOrRnc.includes(searchTerm)) ||
-      (c.email && c.email.toLowerCase().includes(searchTerm.toLowerCase()))
-    );
+      (c.email && c.email.toLowerCase().includes(searchTerm.toLowerCase()));
+
+    if (!matchesSearch) return false;
+
+    if (activeFilterTab === "clientes") {
+      return c.salesCount > 0;
+    }
+    if (activeFilterTab === "prospectos") {
+      return c.salesCount === 0 && c.leadsCount > 0;
+    }
+    return true;
   });
 
   const handleCreateCustomer = async (e: React.FormEvent<HTMLFormElement>) => {
@@ -157,8 +168,44 @@ export function CustomersView({ customers, availableVehicles, orgName }: Custome
         </div>
       )}
 
-      {/* Buscador */}
-      <div className="bg-white border border-[#b3b5b7]/30 rounded-[28px] sm:rounded-[36px] p-4 sm:p-5 shadow-2xs">
+      {/* Filtros por Segmento y Buscador */}
+      <div className="bg-white border border-[#b3b5b7]/30 rounded-[28px] sm:rounded-[36px] p-4 sm:p-5 shadow-2xs space-y-3">
+        <div className="flex items-center gap-2 overflow-x-auto pb-1 sm:pb-0 scrollbar-none">
+          <button
+            type="button"
+            onClick={() => setActiveFilterTab("todos")}
+            className={`px-3.5 py-1.5 rounded-full text-xs font-semibold whitespace-nowrap transition-all cursor-pointer ${
+              activeFilterTab === "todos"
+                ? "bg-[#cc62d5] text-white shadow-2xs"
+                : "bg-[#f4f5f6] text-[#737577] hover:text-[#131517]"
+            }`}
+          >
+            Todos ({customers.length})
+          </button>
+          <button
+            type="button"
+            onClick={() => setActiveFilterTab("clientes")}
+            className={`px-3.5 py-1.5 rounded-full text-xs font-semibold whitespace-nowrap transition-all cursor-pointer ${
+              activeFilterTab === "clientes"
+                ? "bg-[#cc62d5] text-white shadow-2xs"
+                : "bg-[#f4f5f6] text-[#737577] hover:text-[#131517]"
+            }`}
+          >
+            Compradores ({customers.filter((c) => c.salesCount > 0).length})
+          </button>
+          <button
+            type="button"
+            onClick={() => setActiveFilterTab("prospectos")}
+            className={`px-3.5 py-1.5 rounded-full text-xs font-semibold whitespace-nowrap transition-all cursor-pointer ${
+              activeFilterTab === "prospectos"
+                ? "bg-[#cc62d5] text-white shadow-2xs"
+                : "bg-[#f4f5f6] text-[#737577] hover:text-[#131517]"
+            }`}
+          >
+            Prospectos Activos ({customers.filter((c) => c.salesCount === 0 && c.leadsCount > 0).length})
+          </button>
+        </div>
+
         <div className="relative">
           <Search className="w-4 h-4 text-[#737577] absolute left-3.5 top-1/2 -translate-y-1/2" />
           <input

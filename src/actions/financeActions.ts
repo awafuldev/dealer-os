@@ -7,6 +7,7 @@ import { requireSession } from "@/lib/auth";
 export async function createGeneralExpenseAction(formData: FormData) {
   try {
     const { user, org } = await requireSession();
+    const vehicleId = (formData.get("vehicleId") as string)?.trim() || null;
     const category = (formData.get("category") as string)?.trim() || "Otros";
     const description = (formData.get("description") as string)?.trim();
     const amount = parseFloat(formData.get("amount") as string);
@@ -19,6 +20,46 @@ export async function createGeneralExpenseAction(formData: FormData) {
 
     const date = dateRaw ? new Date(dateRaw) : new Date();
 
+    // Si se especificó un vehículo, se registra como gasto de vehículo (afecta costo real)
+    if (vehicleId) {
+      const vehicle = await prisma.vehicle.findFirst({
+        where: { id: vehicleId, organizationId: org.id },
+      });
+
+      if (!vehicle) {
+        return { success: false, error: "El vehículo seleccionado no existe en tu organización." };
+      }
+
+      const vExpense = await prisma.vehicleExpense.create({
+        data: {
+          vehicleId,
+          category,
+          description: notes ? `${description} (${notes})` : description,
+          amount,
+          date,
+          createdBy: user.name,
+        },
+      });
+
+      await prisma.auditLog.create({
+        data: {
+          organizationId: org.id,
+          userId: user.id,
+          action: "AGREGAR_GASTO_VEHICULO",
+          entity: "VehicleExpense",
+          entityId: vehicleId,
+          details: `Gasto de RD$${amount.toLocaleString()} en ${category} para ${vehicle.brand} ${vehicle.model}: ${description}`,
+        },
+      });
+
+      revalidatePath(`/inventory/${vehicleId}`);
+      revalidatePath("/inventory");
+      revalidatePath("/finance");
+      revalidatePath("/");
+      return { success: true, expenseId: vExpense.id };
+    }
+
+    // Gasto operativo general
     const expense = await prisma.generalExpense.create({
       data: {
         organizationId: org.id,
@@ -46,7 +87,7 @@ export async function createGeneralExpenseAction(formData: FormData) {
     revalidatePath("/");
     return { success: true, expenseId: expense.id };
   } catch (error: any) {
-    return { success: false, error: error.message || "Error al registrar gasto general." };
+    return { success: false, error: error.message || "Error al registrar gasto." };
   }
 }
 

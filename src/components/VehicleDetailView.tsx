@@ -26,6 +26,8 @@ import {
   FileText,
   Loader2,
   TrendingUp,
+  ChevronUp,
+  ChevronDown,
 } from "lucide-react";
 import { formatCurrencyRD } from "@/lib/financials";
 import {
@@ -39,6 +41,7 @@ import {
   addVehicleImageAction,
   removeVehicleImageAction,
   setCoverImageAction,
+  reorderVehicleImagesAction,
 } from "@/actions/vehicleActions";
 import { createReservationAction } from "@/actions/salesActions";
 
@@ -214,6 +217,17 @@ export function VehicleDetailView({ vehicle, customers }: VehicleDetailProps) {
     const res = await removeVehicleImageAction(form);
     if (res.success) {
       setMessage({ type: "success", text: "Foto eliminada." });
+      router.refresh();
+    }
+  };
+
+  const handleReorderImage = async (imageId: string, direction: "up" | "down") => {
+    const form = new FormData();
+    form.append("vehicleId", vehicle.id);
+    form.append("imageId", imageId);
+    form.append("direction", direction);
+    const res = await reorderVehicleImagesAction(form);
+    if (res.success) {
       router.refresh();
     }
   };
@@ -639,19 +653,37 @@ export function VehicleDetailView({ vehicle, customers }: VehicleDetailProps) {
                       <Star className="w-3 h-3 fill-current" /> Portada
                     </span>
                   )}
-                  <div className="absolute inset-0 bg-[#131517]/70 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center gap-2">
+                  <div className="absolute inset-0 bg-[#131517]/70 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center gap-1.5 p-2">
+                    <button
+                      type="button"
+                      onClick={() => handleReorderImage(img.id, "up")}
+                      className="p-1.5 rounded-xl bg-white/20 hover:bg-[#cc62d5] text-white text-xs font-semibold cursor-pointer"
+                      title="Mover adelante"
+                    >
+                      <ChevronUp className="w-4 h-4" />
+                    </button>
+                    <button
+                      type="button"
+                      onClick={() => handleReorderImage(img.id, "down")}
+                      className="p-1.5 rounded-xl bg-white/20 hover:bg-[#cc62d5] text-white text-xs font-semibold cursor-pointer"
+                      title="Mover atrás"
+                    >
+                      <ChevronDown className="w-4 h-4" />
+                    </button>
                     {!img.isCover && (
                       <button
+                        type="button"
                         onClick={() => handleSetCover(img.id)}
-                        className="p-2 rounded-xl bg-white/20 hover:bg-[#cc62d5] text-white text-xs font-semibold cursor-pointer"
+                        className="p-1.5 rounded-xl bg-white/20 hover:bg-[#cc62d5] text-white text-xs font-semibold cursor-pointer"
                         title="Hacer Portada"
                       >
                         <Star className="w-4 h-4" />
                       </button>
                     )}
                     <button
+                      type="button"
                       onClick={() => handleDeleteImage(img.id)}
-                      className="p-2 rounded-xl bg-white/20 hover:bg-[#e83b47] text-white text-xs font-semibold cursor-pointer"
+                      className="p-1.5 rounded-xl bg-white/20 hover:bg-[#e83b47] text-white text-xs font-semibold cursor-pointer"
                       title="Eliminar Foto"
                     >
                       <Trash2 className="w-4 h-4" />

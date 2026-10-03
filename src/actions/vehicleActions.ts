@@ -575,3 +575,53 @@ export async function setCoverImageAction(formData: FormData) {
     return { success: false, error: error.message };
   }
 }
+
+export async function reorderVehicleImagesAction(formData: FormData) {
+  try {
+    const { user, org } = await requireSession();
+    const vehicleId = formData.get("vehicleId") as string;
+    const imageId = formData.get("imageId") as string;
+    const direction = formData.get("direction") as "up" | "down";
+
+    if (!vehicleId || !imageId || !direction) {
+      return { success: false, error: "Parámetros incompletos." };
+    }
+
+    const vehicle = await prisma.vehicle.findFirst({
+      where: { id: vehicleId, organizationId: org.id },
+      include: { images: { orderBy: { order: "asc" } } },
+    });
+
+    if (!vehicle) return { success: false, error: "Vehículo no encontrado." };
+
+    const images = vehicle.images;
+    const index = images.findIndex((img) => img.id === imageId);
+    if (index === -1) return { success: false, error: "Imagen no encontrada." };
+
+    const targetIndex = direction === "up" ? index - 1 : index + 1;
+    if (targetIndex < 0 || targetIndex >= images.length) {
+      return { success: true }; // Ya está en el límite
+    }
+
+    const currentImg = images[index];
+    const neighborImg = images[targetIndex];
+
+    await prisma.$transaction([
+      prisma.vehicleImage.update({
+        where: { id: currentImg.id },
+        data: { order: neighborImg.order },
+      }),
+      prisma.vehicleImage.update({
+        where: { id: neighborImg.id },
+        data: { order: currentImg.order },
+      }),
+    ]);
+
+    revalidatePath(`/inventory/${vehicleId}`);
+    revalidatePath("/showroom");
+    if (vehicle.slug) revalidatePath(`/showroom/vehiculos/${vehicle.slug}`);
+    return { success: true };
+  } catch (error: any) {
+    return { success: false, error: error.message };
+  }
+}
