@@ -35,12 +35,14 @@ export function RequirementsSection({ whatsapp, minDownPaymentPct }: Requirement
   ];
 
   return (
-    <section id="requisitos" className="border-t border-white/10 bg-[#0A101A] scroll-mt-24">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 py-20">
-        <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-4 mb-12">
+    <section id="requisitos" className="border-t border-[#F5C518]/15 bg-[#0B0E14] scroll-mt-24 py-24 relative overflow-hidden">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 relative z-10">
+        <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-6 mb-14">
           <div>
-            <p className="text-xs font-semibold tracking-[0.2em] text-[#F5B301] uppercase mb-2">{t("req.badge")}</p>
-            <h2 className="text-3xl sm:text-4xl font-bold tracking-tight max-w-lg">
+            <div className="eyebrow-gold mb-3">
+              <span>{t("req.badge")}</span>
+            </div>
+            <h2 className="font-display text-3xl sm:text-4xl lg:text-5xl font-extrabold tracking-tight max-w-xl text-white">
               {t("req.title")}
             </h2>
           </div>
@@ -49,21 +51,27 @@ export function RequirementsSection({ whatsapp, minDownPaymentPct }: Requirement
               href={waLink}
               target="_blank"
               rel="noopener noreferrer"
-              className="inline-flex items-center gap-2 px-5 py-3 rounded-full border border-white/25 hover:border-white/50 text-white font-semibold text-sm transition-colors shrink-0"
+              className="btn-gold-ghost shrink-0"
             >
-              <MessageCircle className="w-4 h-4" />
-              {t("req.cta")}
+              <MessageCircle className="w-4 h-4 text-[#25D366]" />
+              <span>{t("req.cta")}</span>
             </a>
           )}
         </div>
 
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
           {items.map((item) => (
-            <div key={item.title} className="flex gap-3.5">
-              <FileCheck className="w-5 h-5 text-[#F5B301] shrink-0 mt-0.5" />
+            <div key={item.title} className="motorland-card p-7 flex gap-4 group">
+              <div className="w-10 h-10 rounded-xl bg-[#F5C518]/10 border border-[#F5C518]/25 text-[#F5C518] flex items-center justify-center shrink-0 mt-0.5 group-hover:scale-110 group-hover:bg-[#F5C518] group-hover:text-black transition-all duration-300">
+                <FileCheck className="w-5 h-5" />
+              </div>
               <div>
-                <h3 className="text-sm font-bold text-white">{item.title}</h3>
-                <p className="text-xs text-zinc-400 mt-1 leading-relaxed">{item.text}</p>
+                <h3 className="font-display text-base sm:text-lg font-bold text-white group-hover:text-[#FFD22E] transition-colors">
+                  {item.title}
+                </h3>
+                <p className="text-sm text-zinc-400 mt-1.5 leading-relaxed">
+                  {item.text}
+                </p>
               </div>
             </div>
           ))}

@@ -19,11 +19,11 @@ export function PublicFooter({ org, settings }: { org: OrgLike; settings: Public
   const year = new Date().getFullYear();
 
   return (
-    <footer className="border-t border-white/10 bg-[#05070B]">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 py-12 grid grid-cols-1 sm:grid-cols-3 gap-10">
+    <footer className="border-t border-[#F5C518]/15 bg-gradient-to-b from-[#0B0E14] to-black">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 py-16 grid grid-cols-1 sm:grid-cols-3 gap-12">
         <div>
-          <h3 className="text-lg font-bold text-white">{org.name}</h3>
-          <p className="text-sm text-zinc-400 mt-2 max-w-xs">
+          <h3 className="font-display text-2xl font-extrabold text-white tracking-tight">{org.name}</h3>
+          <p className="text-sm text-zinc-400 mt-3 max-w-xs leading-relaxed">
             {t("footer.desc")}
           </p>
           {(settings.instagramUrl || settings.instagramHandle) && (
@@ -31,9 +31,9 @@ export function PublicFooter({ org, settings }: { org: OrgLike; settings: Public
               href={settings.instagramUrl || `https://instagram.com/${settings.instagramHandle?.replace("@", "")}`}
               target="_blank"
               rel="noopener noreferrer"
-              className="inline-flex items-center gap-2 mt-4 text-sm text-zinc-300 hover:text-white transition-colors"
+              className="inline-flex items-center gap-2.5 mt-5 text-sm font-medium text-zinc-300 hover:text-[#F5C518] transition-colors"
             >
-              <AtSign className="w-4 h-4 text-[#F5B301]" />
+              <AtSign className="w-4 h-4 text-[#F5C518]" />
               {settings.instagramHandle || "Instagram"}
             </a>
           )}
@@ -42,17 +42,17 @@ export function PublicFooter({ org, settings }: { org: OrgLike; settings: Public
               href={settings.facebookUrl}
               target="_blank"
               rel="noopener noreferrer"
-              className="flex items-center gap-2 mt-2 text-sm text-zinc-300 hover:text-white transition-colors"
+              className="flex items-center gap-2.5 mt-2.5 text-sm font-medium text-zinc-300 hover:text-[#F5C518] transition-colors"
             >
-              <Link2 className="w-4 h-4 text-[#F5B301]" />
+              <Link2 className="w-4 h-4 text-[#F5C518]" />
               Facebook
             </a>
           )}
         </div>
 
         <div>
-          <h4 className="text-sm font-semibold text-white mb-3">{t("footer.nav_title")}</h4>
-          <ul className="space-y-2 text-sm text-zinc-400">
+          <h4 className="font-display text-xs font-bold tracking-[0.22em] uppercase text-[#F5C518] mb-4">{t("footer.nav_title")}</h4>
+          <ul className="space-y-2.5 text-sm text-zinc-400">
             <li><Link href="/showroom" className="hover:text-white transition-colors">{t("nav.home")}</Link></li>
             <li><Link href="/showroom#inventario" className="hover:text-white transition-colors">{t("nav.inventory")}</Link></li>
             <li><Link href="/showroom#financiamiento" className="hover:text-white transition-colors">{t("nav.financing")}</Link></li>

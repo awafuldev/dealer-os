@@ -25,32 +25,37 @@ export function VehicleDetailViewClient({ vehicle, whatsapp }: VehicleDetailView
   ].filter((s) => s.value);
 
   return (
-    <div className="max-w-6xl mx-auto px-4 sm:px-6 py-10 pb-28 sm:pb-16">
+    <div className="max-w-6xl mx-auto px-4 sm:px-6 py-12 pb-28 sm:pb-16 relative z-10">
       <Link
         href="/showroom#inventario"
-        className="inline-flex items-center gap-1.5 text-sm text-zinc-400 hover:text-white transition-colors mb-6"
+        className="inline-flex items-center gap-2 text-sm text-zinc-400 hover:text-[#F5C518] transition-colors mb-8 font-display font-semibold"
       >
-        <ArrowLeft className="w-4 h-4" />
+        <ArrowLeft className="w-4 h-4 text-[#F5C518]" />
         {t("detail.back")}
       </Link>
 
-      <div className="grid grid-cols-1 lg:grid-cols-5 gap-10">
+      <div className="grid grid-cols-1 lg:grid-cols-5 gap-12">
         <div className="lg:col-span-3">
           <VehicleGallery images={vehicle.images} alt={`${vehicle.brand} ${vehicle.model} ${vehicle.year}`} />
         </div>
 
-        <div className="lg:col-span-2 space-y-6">
+        <div className="lg:col-span-2 space-y-7">
           <div>
             {vehicle.status === "RESERVADO" && (
-              <span className="inline-block mb-3 bg-amber-500 text-black text-xs font-bold px-2.5 py-1 rounded-full">
+              <span className="inline-block mb-3 bg-amber-500 text-black text-xs font-extrabold px-3 py-1 rounded-full uppercase tracking-wider font-display shadow-md">
                 {t("detail.status_reserved")}
               </span>
             )}
-            <h1 className="text-3xl font-bold tracking-tight text-white">
-              {vehicle.brand} {vehicle.model}
+            <span className="text-xs font-bold tracking-[0.22em] text-[#F5C518] uppercase block mb-1 font-display">
+              {vehicle.brand}
+            </span>
+            <h1 className="font-display text-3xl sm:text-4xl lg:text-5xl font-extrabold tracking-tight text-white leading-tight">
+              {vehicle.model}
             </h1>
-            <p className="text-zinc-500 mt-0.5">{vehicle.year}</p>
-            <p className="text-4xl font-bold text-white mt-4">{formatPrice(vehicle.price)}</p>
+            <p className="text-zinc-400 font-medium text-sm mt-1">{vehicle.year}</p>
+            <p className="font-display text-4xl sm:text-5xl font-black glow-gold-text mt-4 drop-shadow-[0_4px_25px_rgba(245,197,24,0.4)]">
+              {formatPrice(vehicle.price)}
+            </p>
           </div>
 
           <VehicleDetailActions
@@ -61,19 +66,19 @@ export function VehicleDetailViewClient({ vehicle, whatsapp }: VehicleDetailView
           {specs.length > 0 && (
             <div className="grid grid-cols-2 gap-3 pt-2">
               {specs.map((s) => (
-                <div key={s.label} className="bg-white/[0.03] border border-white/10 rounded-xl p-3.5">
-                  <s.icon className="w-4 h-4 text-[#F5B301] mb-1.5" />
-                  <p className="text-[11px] text-zinc-500">{s.label}</p>
-                  <p className="text-sm font-semibold text-white">{s.value}</p>
+                <div key={s.label} className="motorland-card p-4 group">
+                  <s.icon className="w-4 h-4 text-[#F5C518] mb-1.5 group-hover:scale-110 transition-transform" />
+                  <p className="text-[11px] text-zinc-500 uppercase tracking-wider font-semibold">{s.label}</p>
+                  <p className="text-sm font-bold text-white mt-0.5">{s.value}</p>
                 </div>
               ))}
             </div>
           )}
 
           {vehicle.description && (
-            <div className="pt-2">
-              <h2 className="text-sm font-semibold text-white mb-2">{t("detail.description")}</h2>
-              <p className="text-sm text-zinc-400 leading-relaxed whitespace-pre-line">{vehicle.description}</p>
+            <div className="pt-2 motorland-card p-6">
+              <h2 className="font-display text-sm font-bold text-white uppercase tracking-wider text-[#F5C518] mb-2">{t("detail.description")}</h2>
+              <p className="text-sm text-zinc-300 leading-relaxed whitespace-pre-line">{vehicle.description}</p>
             </div>
           )}
         </div>

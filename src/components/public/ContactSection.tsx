@@ -19,41 +19,50 @@ export function ContactSection({ org, settings }: { org: OrgLike; settings: Publ
     : null;
 
   return (
-    <section id="contacto" className="max-w-7xl mx-auto px-4 sm:px-6 py-24 border-t border-white/10 scroll-mt-24">
-      <div className="text-center max-w-2xl mx-auto">
-        <p className="text-xs font-semibold tracking-[0.2em] text-[#F5B301] uppercase mb-3">{t("contact.badge")}</p>
-        <h2 className="text-3xl sm:text-5xl font-bold tracking-tight">{t("contact.title")}</h2>
-        <p className="mt-4 text-zinc-400">
+    <section id="contacto" className="max-w-7xl mx-auto px-4 sm:px-6 py-28 border-t border-[#F5C518]/15 scroll-mt-24 relative overflow-hidden">
+      {/* Luz central dorada */}
+      <div className="pointer-events-none absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 w-[700px] h-[500px] bg-[radial-gradient(ellipse,rgba(245,197,24,0.1),transparent_65%)] blur-3xl" />
+
+      <div className="text-center max-w-3xl mx-auto relative z-10">
+        <div className="eyebrow-gold justify-center mb-3">
+          <span>{t("contact.badge")}</span>
+        </div>
+        <h2 className="font-display text-4xl sm:text-5xl lg:text-6xl font-extrabold tracking-tight text-white">
+          {t("contact.title")}
+        </h2>
+        <p className="mt-5 text-base sm:text-lg text-zinc-300 max-w-xl mx-auto leading-relaxed">
           {t("contact.desc", { name: org.name })}
         </p>
 
-        <div className="mt-9 flex flex-col sm:flex-row items-center justify-center gap-3">
+        <div className="mt-10 flex flex-col sm:flex-row items-center justify-center gap-4">
           {waLink && (
             <a
               href={waLink}
               target="_blank"
               rel="noopener noreferrer"
-              className="inline-flex items-center justify-center gap-2 px-6 py-3.5 rounded-full bg-[#F5B301] hover:bg-[#FFC933] text-black font-semibold text-sm transition-colors w-full sm:w-auto"
+              className="btn-gold w-full sm:w-auto text-base px-8 py-4"
             >
-              <MessageCircle className="w-4 h-4" />
-              {t("contact.cta_whatsapp")}
+              <MessageCircle className="w-5 h-5 fill-current" />
+              <span>{t("contact.cta_whatsapp")}</span>
             </a>
           )}
-          <PublicContactModal variant="outline" label={t("contact.cta_info")} />
+          <PublicContactModal variant="outline" label={t("contact.cta_info")} className="btn-gold-ghost w-full sm:w-auto text-base px-8 py-3.5" />
         </div>
 
-        <div className="mt-10 flex flex-wrap items-center justify-center gap-x-8 gap-y-3 text-sm text-zinc-400">
+        <div className="mt-12 flex flex-wrap items-center justify-center gap-x-8 gap-y-4 text-sm text-zinc-300 font-medium">
           {org.phone && (
-            <span className="flex items-center gap-2"><Phone className="w-4 h-4 text-[#F5B301]" /> {org.phone}</span>
+            <span className="flex items-center gap-2.5 px-4 py-2 rounded-full bg-white/[0.04] border border-white/10">
+              <Phone className="w-4 h-4 text-[#F5C518]" /> {org.phone}
+            </span>
           )}
           {(settings.instagramHandle || settings.instagramUrl) && (
             <a
               href={settings.instagramUrl || `https://instagram.com/${settings.instagramHandle?.replace("@", "")}`}
               target="_blank"
               rel="noopener noreferrer"
-              className="flex items-center gap-2 hover:text-white transition-colors"
+              className="flex items-center gap-2.5 px-4 py-2 rounded-full bg-white/[0.04] border border-white/10 hover:border-[#F5C518] hover:text-[#FFD22E] transition-colors"
             >
-              <AtSign className="w-4 h-4 text-[#F5B301]" /> {settings.instagramHandle}
+              <AtSign className="w-4 h-4 text-[#F5C518]" /> {settings.instagramHandle}
             </a>
           )}
         </div>
