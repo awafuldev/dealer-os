@@ -14,6 +14,8 @@ export const metadata: Metadata = {
 // switcher, quick actions). The (public) group renders the Kiry Auto
 // showroom shell (header, footer, WhatsApp button). Neither should leak
 // into the other.
+import { LanguageProvider } from "@/components/LanguageContext";
+
 export default function RootLayout({
   children,
 }: Readonly<{
@@ -21,7 +23,9 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="es" className="dark">
-      <body className="antialiased min-h-screen">{children}</body>
+      <body className="antialiased min-h-screen">
+        <LanguageProvider>{children}</LanguageProvider>
+      </body>
     </html>
   );
 }

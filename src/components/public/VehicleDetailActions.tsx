@@ -3,6 +3,7 @@
 import { MessageCircle } from "lucide-react";
 import { buildWhatsAppLink, formatCurrencyRD } from "@/lib/financials";
 import { PublicContactModal } from "@/components/PublicContactModal";
+import { useLanguage } from "@/components/LanguageContext";
 
 interface VehicleDetailActionsProps {
   vehicle: { id: string; brand: string; model: string; year: number; price: number };
@@ -10,6 +11,7 @@ interface VehicleDetailActionsProps {
 }
 
 export function VehicleDetailActions({ vehicle, whatsapp }: VehicleDetailActionsProps) {
+  const { t } = useLanguage();
   const waLink = whatsapp
     ? buildWhatsAppLink(
         whatsapp,
@@ -31,13 +33,13 @@ export function VehicleDetailActions({ vehicle, whatsapp }: VehicleDetailActions
             className="flex-1 inline-flex items-center justify-center gap-2 py-3.5 rounded-full bg-[#F5B301] hover:bg-[#FFC933] text-black font-bold text-sm transition-colors"
           >
             <MessageCircle className="w-4 h-4" />
-            Hablar por WhatsApp
+            {t("detail.whatsapp_cta")}
           </a>
         )}
         <PublicContactModal
           vehicle={{ id: vehicle.id, brand: vehicle.brand, model: vehicle.model, year: vehicle.year, price: priceLabel }}
           variant="outline"
-          label="Solicitar información"
+          label={t("detail.info_cta")}
           className="flex-1 inline-flex items-center justify-center gap-2 py-3.5 rounded-full border border-white/25 hover:border-white/50 text-white font-bold text-sm transition-colors"
         />
       </div>
@@ -60,7 +62,7 @@ export function VehicleDetailActions({ vehicle, whatsapp }: VehicleDetailActions
         )}
         <PublicContactModal
           vehicle={{ id: vehicle.id, brand: vehicle.brand, model: vehicle.model, year: vehicle.year, price: priceLabel }}
-          label="Info"
+          label={t("detail.info_short")}
           className="flex-1 inline-flex items-center justify-center gap-1.5 py-3 rounded-full border border-white/25 text-white font-bold text-xs"
         />
       </div>

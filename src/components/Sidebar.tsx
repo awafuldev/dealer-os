@@ -19,29 +19,32 @@ import {
   X,
   ChevronRight,
 } from "lucide-react";
+import { useLanguage } from "./LanguageContext";
+import { LanguageSwitch } from "./LanguageSwitch";
 import { useUser } from "./UserContext";
 import { logoutAction } from "@/actions/authActions";
 import { GlobalSearch } from "./GlobalSearch";
 
-const navigation = [
-  { name: "Inicio", href: "/admin", icon: LayoutDashboard, section: "main" },
-  { name: "Inventario", href: "/inventory", icon: Car, section: "main" },
-  { name: "Prospectos", href: "/leads", icon: Clock, section: "main" },
-  { name: "Ventas", href: "/sales", icon: BadgeDollarSign, section: "main" },
-  { name: "Clientes", href: "/customers", icon: Users, section: "main" },
-  { name: "Dinero", href: "/finance", icon: DollarSign, section: "main" },
-  { name: "Ajustes", href: "/settings", icon: Settings, section: "main" },
-  
-  // Secundarios bajo "Más"
-  { name: "Documentos", href: "/contracts", icon: FileText, section: "secundario" },
-  { name: "Auditoría", href: "/audit", icon: ShieldCheck, section: "secundario" },
-  { name: "Ver Showroom", href: "/", icon: Sparkles, section: "secundario", external: true },
-];
-
 export function Sidebar({ orgName }: { orgName: string }) {
+  const { t } = useLanguage();
   const pathname = usePathname();
   const { userName, userEmail } = useUser();
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+
+  const navigation = [
+    { name: t("admin.nav_dashboard"), href: "/admin", icon: LayoutDashboard, section: "main" },
+    { name: t("admin.nav_inventory"), href: "/inventory", icon: Car, section: "main" },
+    { name: t("admin.nav_leads"), href: "/leads", icon: Clock, section: "main" },
+    { name: t("admin.nav_sales"), href: "/sales", icon: BadgeDollarSign, section: "main" },
+    { name: t("admin.nav_customers"), href: "/customers", icon: Users, section: "main" },
+    { name: t("admin.nav_finance"), href: "/finance", icon: DollarSign, section: "main" },
+    { name: t("admin.nav_settings"), href: "/settings", icon: Settings, section: "main" },
+    
+    // Secundarios bajo "Más"
+    { name: t("admin.nav_contracts"), href: "/contracts", icon: FileText, section: "secundario" },
+    { name: t("admin.nav_audit"), href: "/audit", icon: ShieldCheck, section: "secundario" },
+    { name: t("admin.nav_showroom"), href: "/", icon: Sparkles, section: "secundario", external: true },
+  ];
 
   const isLinkActive = (href: string) => {
     if (href === "/admin") return pathname === "/admin";
@@ -67,6 +70,7 @@ export function Sidebar({ orgName }: { orgName: string }) {
           </div>
         </div>
         <div className="flex items-center gap-1.5">
+          <LanguageSwitch variant="admin" />
           <GlobalSearch />
           <button
             onClick={() => setMobileMenuOpen(true)}
@@ -81,8 +85,8 @@ export function Sidebar({ orgName }: { orgName: string }) {
       {/* Desktop Sidebar */}
       <aside className="hidden md:flex flex-col w-64 bg-white border-r border-[#b3b5b7]/30 text-[#131517] min-h-screen fixed left-0 top-0 bottom-0 z-30 select-none">
         {/* Brand */}
-        <div className="p-5 border-b border-[#f4f5f6] flex items-center justify-between">
-          <div className="flex items-center gap-3 min-w-0">
+        <div className="p-4 border-b border-[#f4f5f6] flex items-center justify-between gap-2">
+          <div className="flex items-center gap-2.5 min-w-0">
             <div className="w-9 h-9 rounded-2xl bg-[#cc62d5] flex items-center justify-center font-black text-white text-base shadow-sm shrink-0">
               D
             </div>
@@ -95,6 +99,7 @@ export function Sidebar({ orgName }: { orgName: string }) {
               </p>
             </div>
           </div>
+          <LanguageSwitch variant="admin" />
         </div>
 
         {/* Global Search */}
@@ -107,7 +112,7 @@ export function Sidebar({ orgName }: { orgName: string }) {
           {/* Menú Principal */}
           <div>
             <p className="px-3.5 text-[10px] font-bold text-[#737577] uppercase tracking-wider mb-1">
-              Menú Principal
+              {t("admin.nav_main")}
             </p>
             <div className="space-y-0.5">
               {navigation
@@ -136,7 +141,7 @@ export function Sidebar({ orgName }: { orgName: string }) {
           {/* Más opciones */}
           <div>
             <p className="px-3.5 text-[10px] font-bold text-[#737577] uppercase tracking-wider mb-1">
-              Más
+              {t("admin.nav_more")}
             </p>
             <div className="space-y-0.5">
               {navigation
@@ -172,7 +177,7 @@ export function Sidebar({ orgName }: { orgName: string }) {
           </div>
           <button
             onClick={() => logoutAction()}
-            title="Cerrar sesión"
+            title={t("admin.sign_out")}
             className="p-2 rounded-xl text-[#737577] hover:text-[#e83b47] hover:bg-[#e83b47]/10 transition-colors shrink-0 cursor-pointer"
           >
             <LogOut className="w-4 h-4" />
@@ -189,7 +194,7 @@ export function Sidebar({ orgName }: { orgName: string }) {
           }`}
         >
           <LayoutDashboard className="w-5 h-5" />
-          <span className="text-[10px]">Inicio</span>
+          <span className="text-[10px]">{t("admin.nav_dashboard")}</span>
         </Link>
         <Link
           href="/inventory"
@@ -198,7 +203,7 @@ export function Sidebar({ orgName }: { orgName: string }) {
           }`}
         >
           <Car className="w-5 h-5" />
-          <span className="text-[10px]">Inventario</span>
+          <span className="text-[10px]">{t("admin.nav_inventory")}</span>
         </Link>
         <Link
           href="/leads"
@@ -207,7 +212,7 @@ export function Sidebar({ orgName }: { orgName: string }) {
           }`}
         >
           <Clock className="w-5 h-5" />
-          <span className="text-[10px]">Prospectos</span>
+          <span className="text-[10px]">{t("admin.nav_leads")}</span>
         </Link>
         <Link
           href="/sales"
@@ -216,7 +221,7 @@ export function Sidebar({ orgName }: { orgName: string }) {
           }`}
         >
           <BadgeDollarSign className="w-5 h-5" />
-          <span className="text-[10px]">Ventas</span>
+          <span className="text-[10px]">{t("admin.nav_sales")}</span>
         </Link>
         <button
           onClick={() => setMobileMenuOpen(true)}
@@ -225,7 +230,7 @@ export function Sidebar({ orgName }: { orgName: string }) {
           }`}
         >
           <Menu className="w-5 h-5" />
-          <span className="text-[10px]">Más</span>
+          <span className="text-[10px]">{t("admin.nav_more")}</span>
         </button>
       </nav>
 
@@ -235,7 +240,7 @@ export function Sidebar({ orgName }: { orgName: string }) {
           <div className="bg-white rounded-t-[32px] border-t border-[#b3b5b7]/30 p-5 space-y-4 max-h-[85vh] overflow-y-auto shadow-2xl">
             <div className="flex items-center justify-between pb-3 border-b border-[#f4f5f6]">
               <div>
-                <h3 className="font-bold text-base text-[#131517]">Menú del Sistema</h3>
+                <h3 className="font-bold text-base text-[#131517]">{t("admin.nav_main")}</h3>
                 <p className="text-xs text-[#737577]">{orgName}</p>
               </div>
               <button
@@ -281,7 +286,7 @@ export function Sidebar({ orgName }: { orgName: string }) {
                 className="w-full flex items-center justify-center gap-2 py-3 rounded-[19px] bg-[#e83b47]/10 text-[#e83b47] hover:bg-[#e83b47]/20 font-semibold text-sm transition-colors"
               >
                 <LogOut className="w-4 h-4" />
-                <span>Cerrar sesión</span>
+                <span>{t("admin.sign_out")}</span>
               </button>
             </div>
           </div>

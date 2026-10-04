@@ -177,6 +177,26 @@ export function SiteSettingsView({ org, settings }: SiteSettingsViewProps) {
               placeholder="131-45678-9"
               hint="Utilizado para la generación de contratos y actos de venta."
             />
+            <div className="sm:col-span-2">
+              <Field
+                label="Logo del Dealer (Ruta o URL)"
+                name="logo"
+                defaultValue={org.logo}
+                placeholder="Ej. /brand/kiry-logo.png o https://..."
+                hint="Imagen que se muestra en el encabezado del showroom público y documentos."
+              />
+              {org.logo && (
+                <div className="mt-2 flex items-center gap-3 p-3 bg-[#f4f5f6] rounded-2xl border border-[#b3b5b7]/30 w-fit">
+                  <span className="text-[11px] font-bold text-[#737577]">Logo actual:</span>
+                  <img
+                    src={org.logo}
+                    alt={org.name}
+                    className="h-10 w-auto object-contain rounded-lg border border-[#b3b5b7]/30 bg-white p-1"
+                  />
+                  <span className="text-[11px] font-mono text-[#737577]">{org.logo}</span>
+                </div>
+              )}
+            </div>
           </div>
         </section>
 

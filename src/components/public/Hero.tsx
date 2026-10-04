@@ -6,6 +6,8 @@ import { ArrowRight, MessageCircle } from "lucide-react";
 import { buildWhatsAppLink } from "@/lib/financials";
 import type { PublicSiteSettings } from "@/lib/siteSettings";
 
+import { useLanguage } from "@/components/LanguageContext";
+
 interface HeroProps {
   orgName: string;
   whatsapp: string | null;
@@ -14,6 +16,7 @@ interface HeroProps {
 }
 
 export function Hero({ orgName, whatsapp, settings, slideImages }: HeroProps) {
+  const { t, lang } = useLanguage();
   const [active, setActive] = useState(0);
   const slides = slideImages.length > 0 ? slideImages : ["/brand/hero-showroom.jpg"];
 
@@ -23,11 +26,15 @@ export function Hero({ orgName, whatsapp, settings, slideImages }: HeroProps) {
     return () => clearInterval(id);
   }, [slides.length]);
 
-  const headline = settings.heroHeadline || "Tu próximo vehículo";
-  const headlineAccent = "te está esperando.";
-  const subheadline =
-    settings.heroSubheadline ||
-    "Seleccionamos cada unidad con los más altos estándares de calidad para ofrecerte una experiencia única.";
+  const headline = lang === "en"
+    ? t("hero.default_headline")
+    : (settings.heroHeadline || t("hero.default_headline"));
+  const headlineAccent = lang === "en"
+    ? t("hero.default_headline_accent")
+    : "te está esperando.";
+  const subheadline = lang === "en"
+    ? t("hero.default_subheadline")
+    : (settings.heroSubheadline || t("hero.default_subheadline"));
 
   const waLink = whatsapp
     ? buildWhatsAppLink(whatsapp, `Hola, me gustaría más información sobre el inventario de ${orgName}.`)
@@ -55,7 +62,7 @@ export function Hero({ orgName, whatsapp, settings, slideImages }: HeroProps) {
         <div className="max-w-xl">
           <p className="flex items-center gap-2 text-xs font-semibold tracking-[0.2em] text-[#F5B301] uppercase mb-5">
             <span className="w-5 h-[2px] bg-[#F5B301]" />
-            Vehículos Premium
+            {t("hero.badge")}
           </p>
           <h1 className="text-5xl sm:text-6xl lg:text-7xl font-bold tracking-tight leading-[1.05]">
             <span className="text-white">{headline}</span>
@@ -71,7 +78,7 @@ export function Hero({ orgName, whatsapp, settings, slideImages }: HeroProps) {
               href="#inventario"
               className="inline-flex items-center justify-center gap-2 px-6 py-3.5 rounded-full bg-[#F5B301] hover:bg-[#FFC933] text-black font-semibold text-sm transition-colors"
             >
-              Ver inventario
+              {t("hero.cta_inventory")}
               <ArrowRight className="w-4 h-4" />
             </Link>
             {waLink && (
@@ -82,7 +89,7 @@ export function Hero({ orgName, whatsapp, settings, slideImages }: HeroProps) {
                 className="inline-flex items-center justify-center gap-2 px-6 py-3.5 rounded-full border border-white/25 hover:border-white/50 text-white font-semibold text-sm transition-colors"
               >
                 <MessageCircle className="w-4 h-4" />
-                Contactar por WhatsApp
+                {t("hero.cta_whatsapp")}
               </a>
             )}
           </div>

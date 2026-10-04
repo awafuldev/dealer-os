@@ -2,6 +2,7 @@
 
 import { useMemo, useState } from "react";
 import { formatCurrencyRD } from "@/lib/financials";
+import { useLanguage } from "@/components/LanguageContext";
 
 interface FinancingCalculatorProps {
   minDownPaymentPct: number;
@@ -16,6 +17,7 @@ export function FinancingCalculator({
   estimatedRatePct,
   defaultPrice = 1200000,
 }: FinancingCalculatorProps) {
+  const { t } = useLanguage();
   const [price, setPrice] = useState(defaultPrice);
   const [downPct, setDownPct] = useState(minDownPaymentPct);
   const [term, setTerm] = useState(maxTermMonths);
@@ -33,11 +35,11 @@ export function FinancingCalculator({
 
   return (
     <div className="bg-[#111A26] border border-white/10 rounded-2xl p-6 space-y-5">
-      <h3 className="text-sm font-bold text-white">Calculadora estimada</h3>
+      <h3 className="text-sm font-bold text-white">{t("financing.calc_title")}</h3>
 
       <div>
         <label className="flex justify-between text-xs text-zinc-400 mb-1.5">
-          <span>Precio del vehículo</span>
+          <span>{t("financing.calc_price")}</span>
           <span className="text-white font-semibold">{formatCurrencyRD(price)}</span>
         </label>
         <input
@@ -53,7 +55,7 @@ export function FinancingCalculator({
 
       <div>
         <label className="flex justify-between text-xs text-zinc-400 mb-1.5">
-          <span>Inicial</span>
+          <span>{t("financing.calc_downpayment")}</span>
           <span className="text-white font-semibold">{downPct}%</span>
         </label>
         <input
@@ -69,7 +71,7 @@ export function FinancingCalculator({
 
       <div>
         <label className="flex justify-between text-xs text-zinc-400 mb-1.5">
-          <span>Plazo</span>
+          <span>{t("financing.calc_term")}</span>
           <span className="text-white font-semibold">{term} meses</span>
         </label>
         <input
@@ -89,7 +91,7 @@ export function FinancingCalculator({
           {formatCurrencyRD(monthlyPayment)}<span className="text-sm font-normal text-zinc-500">/mes</span>
         </p>
         <p className="text-[11px] text-zinc-600 mt-2">
-          Estimación referencial a una tasa aproximada de {estimatedRatePct}% anual. No constituye una oferta de crédito ni un compromiso de aprobación.
+          {t("financing.calc_disclaimer")}
         </p>
       </div>
     </div>

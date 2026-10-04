@@ -1,7 +1,10 @@
+"use client";
+
 import { MessageCircle, Phone, AtSign } from "lucide-react";
 import { buildWhatsAppLink } from "@/lib/financials";
 import { PublicContactModal } from "@/components/PublicContactModal";
 import type { PublicSiteSettings } from "@/lib/siteSettings";
+import { useLanguage } from "@/components/LanguageContext";
 
 interface OrgLike {
   name: string;
@@ -10,6 +13,7 @@ interface OrgLike {
 }
 
 export function ContactSection({ org, settings }: { org: OrgLike; settings: PublicSiteSettings }) {
+  const { t } = useLanguage();
   const waLink = org.whatsapp
     ? buildWhatsAppLink(org.whatsapp, `Hola, me gustaría más información sobre el inventario de ${org.name}.`)
     : null;
@@ -17,10 +21,10 @@ export function ContactSection({ org, settings }: { org: OrgLike; settings: Publ
   return (
     <section id="contacto" className="max-w-7xl mx-auto px-4 sm:px-6 py-24 border-t border-white/10 scroll-mt-24">
       <div className="text-center max-w-2xl mx-auto">
-        <p className="text-xs font-semibold tracking-[0.2em] text-[#F5B301] uppercase mb-3">Visítanos</p>
-        <h2 className="text-3xl sm:text-5xl font-bold tracking-tight">¿Listo para tu próximo vehículo?</h2>
+        <p className="text-xs font-semibold tracking-[0.2em] text-[#F5B301] uppercase mb-3">{t("contact.badge")}</p>
+        <h2 className="text-3xl sm:text-5xl font-bold tracking-tight">{t("contact.title")}</h2>
         <p className="mt-4 text-zinc-400">
-          Escríbenos y un asesor de {org.name} te ayuda a encontrar la unidad correcta.
+          {t("contact.desc", { name: org.name })}
         </p>
 
         <div className="mt-9 flex flex-col sm:flex-row items-center justify-center gap-3">
@@ -32,10 +36,10 @@ export function ContactSection({ org, settings }: { org: OrgLike; settings: Publ
               className="inline-flex items-center justify-center gap-2 px-6 py-3.5 rounded-full bg-[#F5B301] hover:bg-[#FFC933] text-black font-semibold text-sm transition-colors w-full sm:w-auto"
             >
               <MessageCircle className="w-4 h-4" />
-              Hablar por WhatsApp
+              {t("contact.cta_whatsapp")}
             </a>
           )}
-          <PublicContactModal variant="outline" label="Solicitar información" />
+          <PublicContactModal variant="outline" label={t("contact.cta_info")} />
         </div>
 
         <div className="mt-10 flex flex-wrap items-center justify-center gap-x-8 gap-y-3 text-sm text-zinc-400">

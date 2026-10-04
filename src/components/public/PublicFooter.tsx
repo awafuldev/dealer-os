@@ -1,6 +1,10 @@
+"use client";
+
 import Link from "next/link";
 import { AtSign, Link2, Phone, Mail, MapPin, Clock } from "lucide-react";
 import type { PublicSiteSettings } from "@/lib/siteSettings";
+import { useLanguage } from "@/components/LanguageContext";
+import { LanguageSwitch } from "@/components/LanguageSwitch";
 
 interface OrgLike {
   name: string;
@@ -11,6 +15,7 @@ interface OrgLike {
 }
 
 export function PublicFooter({ org, settings }: { org: OrgLike; settings: PublicSiteSettings }) {
+  const { t } = useLanguage();
   const year = new Date().getFullYear();
 
   return (
@@ -19,7 +24,7 @@ export function PublicFooter({ org, settings }: { org: OrgLike; settings: Public
         <div>
           <h3 className="text-lg font-bold text-white">{org.name}</h3>
           <p className="text-sm text-zinc-400 mt-2 max-w-xs">
-            Vehículos seleccionados y un proceso de compra claro, de principio a fin.
+            {t("footer.desc")}
           </p>
           {(settings.instagramUrl || settings.instagramHandle) && (
             <a
@@ -46,18 +51,18 @@ export function PublicFooter({ org, settings }: { org: OrgLike; settings: Public
         </div>
 
         <div>
-          <h4 className="text-sm font-semibold text-white mb-3">Navegación</h4>
+          <h4 className="text-sm font-semibold text-white mb-3">{t("footer.nav_title")}</h4>
           <ul className="space-y-2 text-sm text-zinc-400">
-            <li><Link href="/showroom" className="hover:text-white transition-colors">Inicio</Link></li>
-            <li><Link href="/showroom#inventario" className="hover:text-white transition-colors">Inventario</Link></li>
-            <li><Link href="/showroom#financiamiento" className="hover:text-white transition-colors">Financiamiento</Link></li>
-            <li><Link href="/showroom#nosotros" className="hover:text-white transition-colors">Nosotros</Link></li>
-            <li><Link href="/showroom#contacto" className="hover:text-white transition-colors">Contacto</Link></li>
+            <li><Link href="/showroom" className="hover:text-white transition-colors">{t("nav.home")}</Link></li>
+            <li><Link href="/showroom#inventario" className="hover:text-white transition-colors">{t("nav.inventory")}</Link></li>
+            <li><Link href="/showroom#financiamiento" className="hover:text-white transition-colors">{t("nav.financing")}</Link></li>
+            <li><Link href="/showroom#nosotros" className="hover:text-white transition-colors">{t("nav.about")}</Link></li>
+            <li><Link href="/showroom#contacto" className="hover:text-white transition-colors">{t("nav.contact")}</Link></li>
           </ul>
         </div>
 
         <div>
-          <h4 className="text-sm font-semibold text-white mb-3">Contacto</h4>
+          <h4 className="text-sm font-semibold text-white mb-3">{t("footer.contact_title")}</h4>
           <ul className="space-y-2.5 text-sm text-zinc-400">
             {org.phone && (
               <li className="flex items-center gap-2"><Phone className="w-3.5 h-3.5 text-[#F5B301]" /> {org.phone}</li>
@@ -72,7 +77,7 @@ export function PublicFooter({ org, settings }: { org: OrgLike; settings: Public
               <li className="flex items-start gap-2"><Clock className="w-3.5 h-3.5 text-[#F5B301] mt-0.5" /> <span>{settings.visitHours}</span></li>
             )}
             {!org.phone && !org.email && !org.address && (
-              <li className="text-zinc-600">Datos de contacto próximamente.</li>
+              <li className="text-zinc-600">{t("footer.contact_soon")}</li>
             )}
           </ul>
         </div>
@@ -80,17 +85,19 @@ export function PublicFooter({ org, settings }: { org: OrgLike; settings: Public
 
       <div className="border-t border-white/10 py-5">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 flex flex-col sm:flex-row items-center justify-between gap-4 text-xs text-zinc-600">
-          <span>© {year} {org.name}. Todos los derechos reservados.</span>
+          <span>© {year} {org.name}. {t("footer.rights")}</span>
 
-          <div className="flex items-center gap-4">
+          <div className="flex flex-wrap items-center gap-4">
+            <LanguageSwitch variant="showroom" />
+
             <Link href="/login" className="text-zinc-700 hover:text-zinc-400 transition-colors">
-              Acceso administrativo
+              {t("footer.admin")}
             </Link>
 
             {/* CETU STUDIOS Credit Badge */}
             <div className="flex items-center gap-2.5 px-3.5 py-1.5 rounded-full bg-white/5 border border-white/10 hover:border-white/25 transition-all duration-300 group">
               <span className="text-[11px] text-zinc-400 tracking-wider uppercase font-medium">
-                Hecho por
+                {t("footer.made_by")}
               </span>
               <div className="flex items-center gap-1.5">
                 <img

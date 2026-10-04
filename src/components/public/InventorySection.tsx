@@ -5,14 +5,7 @@ import Link from "next/link";
 import { Search, Gauge, Settings2, Fuel, MessageCircle, ArrowRight, SlidersHorizontal } from "lucide-react";
 import { formatCurrencyRD, buildWhatsAppLink } from "@/lib/financials";
 import type { PublicVehicle } from "@/lib/publicVehicle";
-
-const PRICE_TIERS = [
-  { label: "Precio", value: "" },
-  { label: "Hasta RD$800,000", value: "800000" },
-  { label: "Hasta RD$1,500,000", value: "1500000" },
-  { label: "Hasta RD$2,500,000", value: "2500000" },
-  { label: "Más de RD$2,500,000", value: "9999999999" },
-];
+import { useLanguage } from "@/components/LanguageContext";
 
 export function InventorySection({
   vehicles,
@@ -23,6 +16,7 @@ export function InventorySection({
   whatsapp: string | null;
   orgName: string;
 }) {
+  const { t } = useLanguage();
   const [search, setSearch] = useState("");
   const [brand, setBrand] = useState("");
   const [model, setModel] = useState("");
@@ -30,6 +24,14 @@ export function InventorySection({
   const [priceTier, setPriceTier] = useState("");
   const [bodyType, setBodyType] = useState("");
   const [transmission, setTransmission] = useState("");
+
+  const priceTiers = [
+    { label: t("inventory.tier_all"), value: "" },
+    { label: t("inventory.tier_800k"), value: "800000" },
+    { label: t("inventory.tier_1500k"), value: "1500000" },
+    { label: t("inventory.tier_2500k"), value: "2500000" },
+    { label: t("inventory.tier_more"), value: "9999999999" },
+  ];
 
   const brands = useMemo(() => Array.from(new Set(vehicles.map((v) => v.brand))).sort(), [vehicles]);
   const models = useMemo(
@@ -78,7 +80,7 @@ export function InventorySection({
               <Search className="w-4 h-4 text-zinc-500 absolute left-3.5 top-1/2 -translate-y-1/2" />
               <input
                 type="text"
-                placeholder="Buscar por marca, modelo o palabra clave..."
+                placeholder={t("inventory.search_placeholder")}
                 value={search}
                 onChange={(e) => setSearch(e.target.value)}
                 className="w-full bg-[#111A26] border border-white/10 rounded-lg pl-9 pr-3 py-2.5 text-sm text-white placeholder-zinc-500 focus:outline-none focus:border-[#F5B301]"
@@ -89,7 +91,7 @@ export function InventorySection({
               onChange={(e) => { setBrand(e.target.value); setModel(""); }}
               className="bg-[#111A26] border border-white/10 rounded-lg px-3 py-2.5 text-sm text-white focus:outline-none focus:border-[#F5B301]"
             >
-              <option value="">Marca</option>
+              <option value="">{t("inventory.filter_brand")}</option>
               {brands.map((b) => <option key={b} value={b}>{b}</option>)}
             </select>
             <select
@@ -97,7 +99,7 @@ export function InventorySection({
               onChange={(e) => setModel(e.target.value)}
               className="bg-[#111A26] border border-white/10 rounded-lg px-3 py-2.5 text-sm text-white focus:outline-none focus:border-[#F5B301]"
             >
-              <option value="">Modelo</option>
+              <option value="">{t("inventory.filter_model")}</option>
               {models.map((m) => <option key={m} value={m}>{m}</option>)}
             </select>
             <select
@@ -105,7 +107,7 @@ export function InventorySection({
               onChange={(e) => setYear(e.target.value)}
               className="bg-[#111A26] border border-white/10 rounded-lg px-3 py-2.5 text-sm text-white focus:outline-none focus:border-[#F5B301]"
             >
-              <option value="">Año</option>
+              <option value="">{t("inventory.filter_year")}</option>
               {years.map((y) => <option key={y} value={y}>{y}</option>)}
             </select>
             <select
@@ -113,14 +115,14 @@ export function InventorySection({
               onChange={(e) => setPriceTier(e.target.value)}
               className="bg-[#111A26] border border-white/10 rounded-lg px-3 py-2.5 text-sm text-white focus:outline-none focus:border-[#F5B301]"
             >
-              {PRICE_TIERS.map((t) => <option key={t.value} value={t.value}>{t.label}</option>)}
+              {priceTiers.map((ti) => <option key={ti.value} value={ti.value}>{ti.label}</option>)}
             </select>
             <select
               value={bodyType}
               onChange={(e) => setBodyType(e.target.value)}
               className="bg-[#111A26] border border-white/10 rounded-lg px-3 py-2.5 text-sm text-white focus:outline-none focus:border-[#F5B301]"
             >
-              <option value="">Tipo de vehículo</option>
+              <option value="">{t("inventory.filter_body")}</option>
               {bodyTypes.map((t) => <option key={t} value={t}>{t}</option>)}
             </select>
             <select
@@ -128,7 +130,7 @@ export function InventorySection({
               onChange={(e) => setTransmission(e.target.value)}
               className="bg-[#111A26] border border-white/10 rounded-lg px-3 py-2.5 text-sm text-white focus:outline-none focus:border-[#F5B301]"
             >
-              <option value="">Transmisión</option>
+              <option value="">{t("inventory.filter_transmission")}</option>
               {transmissions.map((t) => <option key={t} value={t}>{t}</option>)}
             </select>
             <button
@@ -137,7 +139,7 @@ export function InventorySection({
               className="inline-flex items-center gap-1.5 px-3.5 py-2.5 rounded-lg border border-white/10 text-zinc-300 hover:text-white hover:border-white/25 text-sm font-medium transition-colors disabled:opacity-40 disabled:cursor-not-allowed"
             >
               <SlidersHorizontal className="w-3.5 h-3.5" />
-              Limpiar
+              {t("inventory.clear_filters")}
             </button>
           </div>
         </div>
@@ -148,20 +150,20 @@ export function InventorySection({
           <div>
             <p className="flex items-center gap-2 text-xs font-semibold tracking-[0.2em] text-[#F5B301] uppercase mb-2">
               <span className="w-5 h-[2px] bg-[#F5B301]" />
-              Nuestro inventario
+              {t("inventory.badge")}
             </p>
-            <h2 className="text-3xl sm:text-4xl font-bold tracking-tight text-white">Vehículos destacados</h2>
+            <h2 className="text-3xl sm:text-4xl font-bold tracking-tight text-white">{t("inventory.title")}</h2>
           </div>
           {hasActiveFilters ? (
             <button
               onClick={clearFilters}
               className="inline-flex items-center gap-1.5 text-sm font-semibold text-[#F5B301] hover:text-[#FFC933] transition-colors shrink-0"
             >
-              Ver todo el inventario
+              {t("inventory.view_all")}
               <ArrowRight className="w-4 h-4" />
             </button>
           ) : (
-            <span className="text-sm text-zinc-500 shrink-0">{vehicles.length} vehículos disponibles</span>
+            <span className="text-sm text-zinc-500 shrink-0">{t("inventory.count", { count: vehicles.length })}</span>
           )}
         </div>
 
@@ -169,10 +171,10 @@ export function InventorySection({
           <EmptyInventoryState whatsapp={whatsapp} orgName={orgName} />
         ) : filtered.length === 0 ? (
           <div className="text-center py-16 border border-dashed border-white/10 rounded-2xl">
-            <p className="text-base font-semibold text-white">No encontramos vehículos con esos filtros</p>
-            <p className="text-sm text-zinc-500 mt-1 mb-4">Prueba ajustando la búsqueda o los filtros.</p>
+            <p className="text-base font-semibold text-white">{t("inventory.no_results")}</p>
+            <p className="text-sm text-zinc-500 mt-1 mb-4">{t("inventory.no_results_desc")}</p>
             <button onClick={clearFilters} className="text-sm font-semibold text-[#F5B301] hover:text-[#FFC933] transition-colors">
-              Limpiar filtros
+              {t("inventory.clear_filters")}
             </button>
           </div>
         ) : (
@@ -188,6 +190,7 @@ export function InventorySection({
 }
 
 function VehicleCard({ vehicle: v, whatsapp }: { vehicle: PublicVehicle; whatsapp: string | null }) {
+  const { t } = useLanguage();
   const waLink = whatsapp
     ? buildWhatsAppLink(whatsapp, `Hola, estoy interesado en el ${v.brand} ${v.model} ${v.year}.`)
     : null;
@@ -205,7 +208,7 @@ function VehicleCard({ vehicle: v, whatsapp }: { vehicle: PublicVehicle; whatsap
             v.status === "RESERVADO" ? "bg-amber-500 text-black" : "bg-emerald-500 text-black"
           }`}
         >
-          {v.status === "RESERVADO" ? "Reservado" : "Disponible"}
+          {v.status === "RESERVADO" ? t("inventory.status_reserved") : t("inventory.status_available")}
         </span>
       </Link>
 
@@ -231,7 +234,7 @@ function VehicleCard({ vehicle: v, whatsapp }: { vehicle: PublicVehicle; whatsap
             href={`/showroom/vehiculos/${v.slug}`}
             className="flex-1 inline-flex items-center justify-center py-2 rounded-lg border border-white/15 hover:border-white/30 text-white text-xs font-semibold transition-colors"
           >
-            Ver vehículo
+            {t("inventory.view_vehicle")}
           </Link>
           {waLink && (
             <a
@@ -251,15 +254,16 @@ function VehicleCard({ vehicle: v, whatsapp }: { vehicle: PublicVehicle; whatsap
 }
 
 function EmptyInventoryState({ whatsapp, orgName }: { whatsapp: string | null; orgName: string }) {
+  const { t } = useLanguage();
   const waLink = whatsapp
     ? buildWhatsAppLink(whatsapp, `Hola, quisiera saber qué vehículos tiene disponibles ${orgName}.`)
     : null;
 
   return (
     <div className="text-center py-20 border border-dashed border-white/10 rounded-2xl">
-      <p className="text-lg font-semibold text-white">Estamos actualizando nuestro inventario</p>
+      <p className="text-lg font-semibold text-white">{t("inventory.empty_title")}</p>
       <p className="text-sm text-zinc-500 mt-1 mb-6 max-w-sm mx-auto">
-        Escríbenos por WhatsApp y te contamos qué unidades tenemos disponibles en este momento.
+        {t("inventory.empty_desc")}
       </p>
       {waLink && (
         <a
@@ -269,7 +273,7 @@ function EmptyInventoryState({ whatsapp, orgName }: { whatsapp: string | null; o
           className="inline-flex items-center gap-2 px-5 py-3 rounded-full bg-[#F5B301] hover:bg-[#FFC933] text-black font-semibold text-sm transition-colors"
         >
           <MessageCircle className="w-4 h-4" />
-          Escríbenos por WhatsApp
+          {t("nav.whatsapp_write")}
         </a>
       )}
     </div>

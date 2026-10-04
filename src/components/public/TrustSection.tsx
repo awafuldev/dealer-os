@@ -1,7 +1,11 @@
+"use client";
+
 import { ShieldCheck } from "lucide-react";
 import type { PublicSiteSettings } from "@/lib/siteSettings";
+import { useLanguage } from "@/components/LanguageContext";
 
 export function TrustSection({ orgName, settings }: { orgName: string; settings: PublicSiteSettings }) {
+  const { t } = useLanguage();
   const blocks = [
     { title: settings.trustTitle1, text: settings.trustText1 },
     { title: settings.trustTitle2, text: settings.trustText2 },
@@ -14,12 +18,12 @@ export function TrustSection({ orgName, settings }: { orgName: string; settings:
   return (
     <section id="nosotros" className="border-t border-white/10 bg-[#0A101A] scroll-mt-24">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 py-20">
-        <p className="text-xs font-semibold tracking-[0.2em] text-[#F5B301] uppercase mb-2">Nosotros</p>
+        <p className="text-xs font-semibold tracking-[0.2em] text-[#F5B301] uppercase mb-2">{t("trust.badge")}</p>
         <h2 className="text-3xl sm:text-4xl font-bold tracking-tight max-w-2xl">
-          Por qué comprar con {orgName}
+          {t("trust.title", { name: orgName })}
         </h2>
         <p className="mt-4 text-zinc-400 max-w-xl">
-          Nos enfocamos en un inventario cuidado y un proceso de compra claro, sin letra pequeña.
+          {t("trust.desc")}
         </p>
 
         {blocks.length > 0 && (

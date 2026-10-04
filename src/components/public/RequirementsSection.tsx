@@ -1,5 +1,8 @@
+"use client";
+
 import { MessageCircle, FileCheck } from "lucide-react";
 import { buildWhatsAppLink } from "@/lib/financials";
+import { useLanguage } from "@/components/LanguageContext";
 
 interface RequirementsSectionProps {
   whatsapp: string | null;
@@ -7,26 +10,27 @@ interface RequirementsSectionProps {
 }
 
 export function RequirementsSection({ whatsapp, minDownPaymentPct }: RequirementsSectionProps) {
+  const { t } = useLanguage();
   const waLink = whatsapp
     ? buildWhatsAppLink(whatsapp, "Hola, tengo una duda sobre los requisitos para comprar un vehículo.")
     : null;
 
   const items = [
     {
-      title: "Cédula o pasaporte vigente",
-      text: "Del titular que va a quedar en la matrícula.",
+      title: t("req.item1_title"),
+      text: t("req.item1_text"),
     },
     {
-      title: "Carta de trabajo o estados de cuenta",
-      text: "Solo si vas a financiar. Sirve para sustentar ingresos.",
+      title: t("req.item2_title"),
+      text: t("req.item2_text"),
     },
     {
-      title: minDownPaymentPct ? `Inicial desde el ${minDownPaymentPct}%` : "Inicial según tu perfil",
-      text: "Varía según la unidad y tu evaluación crediticia.",
+      title: minDownPaymentPct ? t("req.item3_title_pct", { pct: minDownPaymentPct }) : t("req.item3_title_default"),
+      text: t("req.item3_text"),
     },
     {
-      title: "Matrícula de tu vehículo actual",
-      text: "Si lo vas a entregar como parte de pago, lo evaluamos antes de definir el precio final.",
+      title: t("req.item4_title"),
+      text: t("req.item4_text"),
     },
   ];
 
@@ -35,9 +39,9 @@ export function RequirementsSection({ whatsapp, minDownPaymentPct }: Requirement
       <div className="max-w-7xl mx-auto px-4 sm:px-6 py-20">
         <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-4 mb-12">
           <div>
-            <p className="text-xs font-semibold tracking-[0.2em] text-[#F5B301] uppercase mb-2">Lo que necesitas</p>
+            <p className="text-xs font-semibold tracking-[0.2em] text-[#F5B301] uppercase mb-2">{t("req.badge")}</p>
             <h2 className="text-3xl sm:text-4xl font-bold tracking-tight max-w-lg">
-              Nada de sorpresas al momento de firmar.
+              {t("req.title")}
             </h2>
           </div>
           {waLink && (
@@ -48,7 +52,7 @@ export function RequirementsSection({ whatsapp, minDownPaymentPct }: Requirement
               className="inline-flex items-center gap-2 px-5 py-3 rounded-full border border-white/25 hover:border-white/50 text-white font-semibold text-sm transition-colors shrink-0"
             >
               <MessageCircle className="w-4 h-4" />
-              Preguntar por mi caso
+              {t("req.cta")}
             </a>
           )}
         </div>

@@ -30,7 +30,7 @@ export async function updateSiteSettingsAction(formData: FormData) {
     // 1. Actualizar Organización Base (Nombre, RNC, Logo, Contacto)
     const orgName = strOrNull(formData, "orgName") || org.name;
     const rnc = strOrNull(formData, "rnc");
-    const logo = strOrNull(formData, "logo");
+    const logo = formData.has("logo") ? strOrNull(formData, "logo") : org.logo;
     const phone = strOrNull(formData, "phone");
     const whatsapp = strOrNull(formData, "whatsapp");
     const address = strOrNull(formData, "address");
@@ -41,7 +41,7 @@ export async function updateSiteSettingsAction(formData: FormData) {
       data: {
         name: orgName,
         rnc,
-        logo: logo || org.logo,
+        logo,
         phone,
         whatsapp,
         address,

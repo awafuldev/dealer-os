@@ -1,7 +1,11 @@
+"use client";
+
 import { AtSign, ArrowUpRight } from "lucide-react";
 import type { PublicSiteSettings } from "@/lib/siteSettings";
+import { useLanguage } from "@/components/LanguageContext";
 
 export function InstagramSection({ settings }: { settings: PublicSiteSettings }) {
+  const { t } = useLanguage();
   if (!settings.instagramHandle && !settings.instagramUrl) return null;
 
   const handle = settings.instagramHandle || "@dealer";
@@ -9,9 +13,9 @@ export function InstagramSection({ settings }: { settings: PublicSiteSettings })
 
   return (
     <section id="instagram" className="max-w-7xl mx-auto px-4 sm:px-6 py-20 border-t border-white/10 scroll-mt-24">
-      <p className="text-xs font-semibold tracking-[0.2em] text-[#F5B301] uppercase mb-2">Desde Instagram</p>
+      <p className="text-xs font-semibold tracking-[0.2em] text-[#F5B301] uppercase mb-2">{t("instagram.badge")}</p>
       <h2 className="text-2xl sm:text-3xl font-bold tracking-tight mb-8 max-w-lg">
-        Vehículos nuevos, primero en Instagram.
+        {t("instagram.title")}
       </h2>
       <a
         href={url}
@@ -24,13 +28,13 @@ export function InstagramSection({ settings }: { settings: PublicSiteSettings })
             <AtSign className="w-7 h-7 text-[#F5B301]" />
           </div>
           <div>
-            <p className="text-xs font-semibold tracking-[0.2em] text-[#F5B301] uppercase mb-1">Síguenos</p>
+            <p className="text-xs font-semibold tracking-[0.2em] text-[#F5B301] uppercase mb-1">{t("instagram.follow")}</p>
             <h3 className="text-2xl font-bold text-white">{handle}</h3>
-            <p className="text-sm text-zinc-400 mt-0.5">Vehículos nuevos y novedades del showroom.</p>
+            <p className="text-sm text-zinc-400 mt-0.5">{t("instagram.desc")}</p>
           </div>
         </div>
         <span className="inline-flex items-center gap-2 text-sm font-semibold text-white shrink-0">
-          Ver perfil
+          {t("instagram.view_profile")}
           <ArrowUpRight className="w-4 h-4 group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-transform" />
         </span>
       </a>

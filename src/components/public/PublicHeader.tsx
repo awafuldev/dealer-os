@@ -4,14 +4,8 @@ import { useState } from "react";
 import Link from "next/link";
 import { Menu, X, MessageCircle } from "lucide-react";
 import { buildWhatsAppLink } from "@/lib/financials";
-
-const NAV_LINKS = [
-  { label: "Inicio", href: "/showroom" },
-  { label: "Inventario", href: "/showroom#inventario" },
-  { label: "Financiamiento", href: "/showroom#financiamiento" },
-  { label: "Nosotros", href: "/showroom#nosotros" },
-  { label: "Contacto", href: "/showroom#contacto" },
-];
+import { useLanguage } from "@/components/LanguageContext";
+import { LanguageSwitch } from "@/components/LanguageSwitch";
 
 export function PublicHeader({
   orgName,
@@ -22,11 +16,20 @@ export function PublicHeader({
   whatsapp: string | null;
   logo?: string | null;
 }) {
+  const { t } = useLanguage();
   const [logoError, setLogoError] = useState(false);
   const [open, setOpen] = useState(false);
   const waLink = whatsapp
     ? buildWhatsAppLink(whatsapp, `Hola, me gustaría más información sobre el inventario de ${orgName}.`)
     : null;
+
+  const navLinks = [
+    { label: t("nav.home"), href: "/showroom" },
+    { label: t("nav.inventory"), href: "/showroom#inventario" },
+    { label: t("nav.financing"), href: "/showroom#financiamiento" },
+    { label: t("nav.about"), href: "/showroom#nosotros" },
+    { label: t("nav.contact"), href: "/showroom#contacto" },
+  ];
 
   return (
     <header className="sticky top-0 z-50 bg-[#05070B]/95 backdrop-blur-md border-b border-white/10">
@@ -50,7 +53,7 @@ export function PublicHeader({
         </Link>
 
         <nav className="hidden md:flex items-center gap-8">
-          {NAV_LINKS.map((link, i) => (
+          {navLinks.map((link, i) => (
             <Link
               key={link.href}
               href={link.href}
@@ -66,6 +69,7 @@ export function PublicHeader({
         </nav>
 
         <div className="hidden md:flex items-center gap-3 shrink-0">
+          <LanguageSwitch variant="showroom" />
           {waLink && (
             <a
               href={waLink}
@@ -74,23 +78,26 @@ export function PublicHeader({
               className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-[#F5B301] hover:bg-[#FFC933] text-black font-semibold text-sm transition-colors"
             >
               <MessageCircle className="w-4 h-4" />
-              WhatsApp
+              {t("nav.whatsapp")}
             </a>
           )}
         </div>
 
-        <button
-          onClick={() => setOpen(!open)}
-          className="md:hidden p-2 text-white"
-          aria-label="Abrir menú"
-        >
-          {open ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
-        </button>
+        <div className="flex md:hidden items-center gap-2">
+          <LanguageSwitch variant="showroom" />
+          <button
+            onClick={() => setOpen(!open)}
+            className="p-2 text-white"
+            aria-label="Abrir menú"
+          >
+            {open ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
+          </button>
+        </div>
       </div>
 
       {open && (
         <nav className="md:hidden border-t border-white/10 bg-[#05070B] px-4 py-4 flex flex-col gap-1">
-          {NAV_LINKS.map((link) => (
+          {navLinks.map((link) => (
             <Link
               key={link.href}
               href={link.href}
@@ -109,16 +116,16 @@ export function PublicHeader({
               className="mt-3 inline-flex items-center justify-center gap-2 px-4 py-3 rounded-full bg-[#F5B301] text-black font-semibold text-sm"
             >
               <MessageCircle className="w-4 h-4" />
-              Escríbenos por WhatsApp
+              {t("nav.whatsapp_write")}
             </a>
           )}
-          <div className="mt-4 pt-3 border-t border-white/10">
+          <div className="mt-4 pt-3 border-t border-white/10 flex items-center justify-between">
             <Link
               href="/login"
               onClick={() => setOpen(false)}
               className="text-xs text-zinc-600 hover:text-zinc-400 transition-colors"
             >
-              Acceso administrativo
+              {t("nav.admin")}
             </Link>
           </div>
         </nav>
