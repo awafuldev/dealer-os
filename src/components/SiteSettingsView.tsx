@@ -3,9 +3,10 @@
 import { useState } from "react";
 import Link from "next/link";
 import {
-  Globe, Save, CheckCircle2, AlertCircle, ExternalLink, Building2, Loader2, Sparkles,
+  Globe, Save, CheckCircle2, AlertCircle, ExternalLink, Building2, Loader2, Sparkles, Upload, Image as ImageIcon, DollarSign,
 } from "lucide-react";
 import { updateSiteSettingsAction } from "@/actions/siteSettingsActions";
+import { useLanguage } from "@/components/LanguageContext";
 
 interface SiteSettingsViewProps {
   org: {
@@ -89,8 +90,20 @@ function Field({
 }
 
 export function SiteSettingsView({ org, settings }: SiteSettingsViewProps) {
+  const { currency, setCurrency } = useLanguage();
   const [loading, setLoading] = useState(false);
   const [message, setMessage] = useState<{ type: "success" | "error"; text: string } | null>(null);
+  const [previewUrl, setPreviewUrl] = useState<string | null>(null);
+
+  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (file) {
+      const url = URL.createObjectURL(file);
+      setPreviewUrl(url);
+    } else {
+      setPreviewUrl(null);
+    }
+  };
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -118,7 +131,7 @@ export function SiteSettingsView({ org, settings }: SiteSettingsViewProps) {
             Configuración del Dealer
           </h1>
           <p className="text-xs sm:text-sm text-[#737577] mt-1">
-            Personaliza el nombre comercial, RNC, contacto y las secciones de tu showroom web.
+            Personaliza el nombre comercial, RNC, logo, moneda y las secciones de tu showroom web.
           </p>
         </div>
         <Link
@@ -155,7 +168,7 @@ export function SiteSettingsView({ org, settings }: SiteSettingsViewProps) {
         </div>
       )}
 
-      <form onSubmit={handleSubmit} className="space-y-6">
+      <form onSubmit={handleSubmit} encType="multipart/form-data" className="space-y-6">
         {/* Identidad del Dealer */}
         <section className="bg-white border border-[#b3b5b7]/30 rounded-[32px] sm:rounded-[40px] p-6 sm:p-8 space-y-4 shadow-2xs">
           <div className="border-b border-[#f4f5f6] pb-3 mb-2">
@@ -177,25 +190,122 @@ export function SiteSettingsView({ org, settings }: SiteSettingsViewProps) {
               placeholder="131-45678-9"
               hint="Utilizado para la generación de contratos y actos de venta."
             />
-            <div className="sm:col-span-2">
-              <Field
-                label="Logo del Dealer (Ruta o URL)"
-                name="logo"
-                defaultValue={org.logo}
-                placeholder="Ej. /brand/kiry-logo.png o https://..."
-                hint="Imagen que se muestra en el encabezado del showroom público y documentos."
-              />
-              {org.logo && (
-                <div className="mt-2 flex items-center gap-3 p-3 bg-[#f4f5f6] rounded-2xl border border-[#b3b5b7]/30 w-fit">
-                  <span className="text-[11px] font-bold text-[#737577]">Logo actual:</span>
-                  <img
-                    src={org.logo}
-                    alt={org.name}
-                    className="h-10 w-auto object-contain rounded-lg border border-[#b3b5b7]/30 bg-white p-1"
+
+            {/* Logo de la Empresa */}
+            <div className="sm:col-span-2 pt-2 border-t border-[#f4f5f6]">
+              <label className="block text-xs font-bold text-[#131517] mb-1.5">
+                Logo del Dealer
+              </label>
+              <p className="text-[11px] text-[#737577] mb-3">
+                Sube una imagen desde tu dispositivo o especifica la ruta/URL del logo.
+              </p>
+
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4 items-start">
+                {/* Upload de archivo */}
+                <div className="border-2 border-dashed border-[#b3b5b7]/50 rounded-2xl p-4 bg-[#f4f5f6]/50 hover:bg-[#f4f5f6] transition-colors text-center">
+                  <input
+                    type="file"
+                    name="logoFile"
+                    id="logoFileInput"
+                    accept="image/png,image/jpeg,image/webp,image/svg+xml"
+                    onChange={handleFileChange}
+                    className="hidden"
                   />
-                  <span className="text-[11px] font-mono text-[#737577]">{org.logo}</span>
+                  <label
+                    htmlFor="logoFileInput"
+                    className="cursor-pointer flex flex-col items-center justify-center gap-2 py-2"
+                  >
+                    <div className="w-10 h-10 rounded-full bg-[#cc62d5]/10 text-[#cc62d5] flex items-center justify-center">
+                      <Upload className="w-5 h-5" />
+                    </div>
+                    <div>
+                      <span className="text-xs font-bold text-[#cc62d5] hover:underline">
+                        Seleccionar o subir logo
+                      </span>
+                      <p className="text-[11px] text-[#737577] mt-0.5">
+                        PNG, JPG, SVG o WebP (máx. 5MB)
+                      </p>
+                    </div>
+                  </label>
                 </div>
-              )}
+
+                {/* Preview del Logo */}
+                <div className="flex flex-col gap-2 p-3 bg-[#f4f5f6] rounded-2xl border border-[#b3b5b7]/30 min-h-[96px] justify-center">
+                  <div className="flex items-center justify-between">
+                    <span className="text-[11px] font-bold text-[#737577]">
+                      {previewUrl ? "Vista previa (nuevo archivo):" : "Logo actual:"}
+                    </span>
+                    {previewUrl && (
+                      <span className="text-[10px] bg-[#cc62d5] text-white px-2 py-0.5 rounded-full font-bold">
+                        Nuevo listo para guardar
+                      </span>
+                    )}
+                  </div>
+                  {previewUrl || org.logo ? (
+                    <div className="flex items-center gap-3">
+                      <div className="h-12 w-32 rounded-xl bg-white border border-[#b3b5b7]/30 p-1.5 flex items-center justify-center overflow-hidden">
+                        <img
+                          src={previewUrl || org.logo!}
+                          alt="Logo Preview"
+                          className="max-h-full max-w-full object-contain"
+                        />
+                      </div>
+                      <span className="text-[11px] font-mono text-[#737577] truncate max-w-[200px]">
+                        {previewUrl ? "Imagen seleccionada" : org.logo}
+                      </span>
+                    </div>
+                  ) : (
+                    <p className="text-xs text-[#737577] italic">No hay logo configurado</p>
+                  )}
+                </div>
+              </div>
+
+              {/* Opción de URL manual */}
+              <div className="mt-3">
+                <Field
+                  label="Ruta o URL del logo (alternativa manual)"
+                  name="logo"
+                  defaultValue={org.logo}
+                  placeholder="Ej. /brand/kiry-logo.png o https://..."
+                  hint="Si subes un archivo arriba, este campo se actualizará automáticamente."
+                />
+              </div>
+            </div>
+
+            {/* Moneda Preferida (DOP / USD) */}
+            <div className="sm:col-span-2 pt-3 border-t border-[#f4f5f6]">
+              <label className="block text-xs font-bold text-[#131517] mb-1">
+                Moneda Activa del Sistema (DOP / USD)
+              </label>
+              <p className="text-[11px] text-[#737577] mb-3">
+                Selecciona la moneda en la que deseas visualizar precios. También puedes cambiarla en cualquier momento desde la barra superior.
+              </p>
+              <div className="flex flex-wrap gap-3">
+                <button
+                  type="button"
+                  onClick={() => setCurrency("DOP")}
+                  className={`inline-flex items-center gap-2 px-4 py-2.5 rounded-2xl text-xs font-bold transition-all cursor-pointer border ${
+                    currency === "DOP"
+                      ? "bg-[#cc62d5] text-white border-[#cc62d5] shadow-xs"
+                      : "bg-[#f4f5f6] text-[#737577] border-[#b3b5b7]/40 hover:text-[#131517] hover:bg-white"
+                  }`}
+                >
+                  <span>🇩🇴 Pesos Dominicanos (RD$ / DOP)</span>
+                  {currency === "DOP" && <CheckCircle2 className="w-3.5 h-3.5" />}
+                </button>
+                <button
+                  type="button"
+                  onClick={() => setCurrency("USD")}
+                  className={`inline-flex items-center gap-2 px-4 py-2.5 rounded-2xl text-xs font-bold transition-all cursor-pointer border ${
+                    currency === "USD"
+                      ? "bg-[#cc62d5] text-white border-[#cc62d5] shadow-xs"
+                      : "bg-[#f4f5f6] text-[#737577] border-[#b3b5b7]/40 hover:text-[#131517] hover:bg-white"
+                  }`}
+                >
+                  <span>🇺🇸 Dólares Estadounidenses (US$ / USD)</span>
+                  {currency === "USD" && <CheckCircle2 className="w-3.5 h-3.5" />}
+                </button>
+              </div>
             </div>
           </div>
         </section>

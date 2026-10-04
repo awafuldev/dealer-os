@@ -4,7 +4,7 @@ import Link from "next/link";
 import { AtSign, Link2, Phone, Mail, MapPin, Clock } from "lucide-react";
 import type { PublicSiteSettings } from "@/lib/siteSettings";
 import { useLanguage } from "@/components/LanguageContext";
-import { LanguageSwitch } from "@/components/LanguageSwitch";
+import { LanguageSwitch, CurrencySwitch } from "@/components/LanguageSwitch";
 
 interface OrgLike {
   name: string;
@@ -87,8 +87,9 @@ export function PublicFooter({ org, settings }: { org: OrgLike; settings: Public
         <div className="max-w-7xl mx-auto px-4 sm:px-6 flex flex-col sm:flex-row items-center justify-between gap-4 text-xs text-zinc-600">
           <span>© {year} {org.name}. {t("footer.rights")}</span>
 
-          <div className="flex flex-wrap items-center gap-4">
+          <div className="flex flex-wrap items-center gap-3">
             <LanguageSwitch variant="showroom" />
+            <CurrencySwitch variant="showroom" />
 
             <Link href="/login" className="text-zinc-700 hover:text-zinc-400 transition-colors">
               {t("footer.admin")}

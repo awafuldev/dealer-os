@@ -20,7 +20,7 @@ import {
   ChevronRight,
 } from "lucide-react";
 import { useLanguage } from "./LanguageContext";
-import { LanguageSwitch } from "./LanguageSwitch";
+import { LanguageSwitch, CurrencySwitch } from "./LanguageSwitch";
 import { useUser } from "./UserContext";
 import { logoutAction } from "@/actions/authActions";
 import { GlobalSearch } from "./GlobalSearch";
@@ -71,6 +71,7 @@ export function Sidebar({ orgName }: { orgName: string }) {
         </div>
         <div className="flex items-center gap-1.5">
           <LanguageSwitch variant="admin" />
+          <CurrencySwitch variant="admin" />
           <GlobalSearch />
           <button
             onClick={() => setMobileMenuOpen(true)}
@@ -85,7 +86,7 @@ export function Sidebar({ orgName }: { orgName: string }) {
       {/* Desktop Sidebar */}
       <aside className="hidden md:flex flex-col w-64 bg-white border-r border-[#b3b5b7]/30 text-[#131517] min-h-screen fixed left-0 top-0 bottom-0 z-30 select-none">
         {/* Brand */}
-        <div className="p-4 border-b border-[#f4f5f6] flex items-center justify-between gap-2">
+        <div className="p-4 border-b border-[#f4f5f6] flex items-center justify-between gap-1.5">
           <div className="flex items-center gap-2.5 min-w-0">
             <div className="w-9 h-9 rounded-2xl bg-[#cc62d5] flex items-center justify-center font-black text-white text-base shadow-sm shrink-0">
               D
@@ -99,7 +100,10 @@ export function Sidebar({ orgName }: { orgName: string }) {
               </p>
             </div>
           </div>
-          <LanguageSwitch variant="admin" />
+          <div className="flex flex-col gap-1 items-end shrink-0">
+            <LanguageSwitch variant="admin" />
+            <CurrencySwitch variant="admin" />
+          </div>
         </div>
 
         {/* Global Search */}

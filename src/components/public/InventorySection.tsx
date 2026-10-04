@@ -3,7 +3,7 @@
 import { useMemo, useState } from "react";
 import Link from "next/link";
 import { Search, Gauge, Settings2, Fuel, MessageCircle, ArrowRight, SlidersHorizontal } from "lucide-react";
-import { formatCurrencyRD, buildWhatsAppLink } from "@/lib/financials";
+import { buildWhatsAppLink } from "@/lib/financials";
 import type { PublicVehicle } from "@/lib/publicVehicle";
 import { useLanguage } from "@/components/LanguageContext";
 
@@ -16,7 +16,7 @@ export function InventorySection({
   whatsapp: string | null;
   orgName: string;
 }) {
-  const { t } = useLanguage();
+  const { t, formatPrice, currency } = useLanguage();
   const [search, setSearch] = useState("");
   const [brand, setBrand] = useState("");
   const [model, setModel] = useState("");
@@ -25,13 +25,13 @@ export function InventorySection({
   const [bodyType, setBodyType] = useState("");
   const [transmission, setTransmission] = useState("");
 
-  const priceTiers = [
+  const priceTiers = useMemo(() => [
     { label: t("inventory.tier_all"), value: "" },
-    { label: t("inventory.tier_800k"), value: "800000" },
-    { label: t("inventory.tier_1500k"), value: "1500000" },
-    { label: t("inventory.tier_2500k"), value: "2500000" },
-    { label: t("inventory.tier_more"), value: "9999999999" },
-  ];
+    { label: `${currency === "USD" ? "Up to" : "Hasta"} ${formatPrice(800000)}`, value: "800000" },
+    { label: `${currency === "USD" ? "Up to" : "Hasta"} ${formatPrice(1500000)}`, value: "1500000" },
+    { label: `${currency === "USD" ? "Up to" : "Hasta"} ${formatPrice(2500000)}`, value: "2500000" },
+    { label: `${currency === "USD" ? "More than" : "Más de"} ${formatPrice(2500000)}`, value: "9999999999" },
+  ], [t, formatPrice, currency]);
 
   const brands = useMemo(() => Array.from(new Set(vehicles.map((v) => v.brand))).sort(), [vehicles]);
   const models = useMemo(
@@ -190,7 +190,7 @@ export function InventorySection({
 }
 
 function VehicleCard({ vehicle: v, whatsapp }: { vehicle: PublicVehicle; whatsapp: string | null }) {
-  const { t } = useLanguage();
+  const { t, formatPrice } = useLanguage();
   const waLink = whatsapp
     ? buildWhatsAppLink(whatsapp, `Hola, estoy interesado en el ${v.brand} ${v.model} ${v.year}.`)
     : null;
@@ -227,7 +227,7 @@ function VehicleCard({ vehicle: v, whatsapp }: { vehicle: PublicVehicle; whatsap
           {v.fuel && <span className="flex items-center gap-1"><Fuel className="w-3 h-3" /> {v.fuel}</span>}
         </div>
 
-        <p className="text-xl font-bold text-[#F5B301] mt-3">{formatCurrencyRD(v.price)}</p>
+        <p className="text-xl font-bold text-[#F5B301] mt-3">{formatPrice(v.price)}</p>
 
         <div className="mt-4 flex gap-2 pt-3 border-t border-white/10 mt-auto">
           <Link

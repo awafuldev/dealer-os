@@ -1,7 +1,6 @@
 "use client";
 
 import { useMemo, useState } from "react";
-import { formatCurrencyRD } from "@/lib/financials";
 import { useLanguage } from "@/components/LanguageContext";
 
 interface FinancingCalculatorProps {
@@ -17,7 +16,7 @@ export function FinancingCalculator({
   estimatedRatePct,
   defaultPrice = 1200000,
 }: FinancingCalculatorProps) {
-  const { t } = useLanguage();
+  const { t, formatPrice, lang } = useLanguage();
   const [price, setPrice] = useState(defaultPrice);
   const [downPct, setDownPct] = useState(minDownPaymentPct);
   const [term, setTerm] = useState(maxTermMonths);
@@ -40,7 +39,7 @@ export function FinancingCalculator({
       <div>
         <label className="flex justify-between text-xs text-zinc-400 mb-1.5">
           <span>{t("financing.calc_price")}</span>
-          <span className="text-white font-semibold">{formatCurrencyRD(price)}</span>
+          <span className="text-white font-semibold">{formatPrice(price)}</span>
         </label>
         <input
           type="range"
@@ -72,7 +71,7 @@ export function FinancingCalculator({
       <div>
         <label className="flex justify-between text-xs text-zinc-400 mb-1.5">
           <span>{t("financing.calc_term")}</span>
-          <span className="text-white font-semibold">{term} meses</span>
+          <span className="text-white font-semibold">{term} {lang === "en" ? "months" : "meses"}</span>
         </label>
         <input
           type="range"
@@ -86,9 +85,11 @@ export function FinancingCalculator({
       </div>
 
       <div className="pt-4 border-t border-white/10">
-        <p className="text-xs text-zinc-500">Monto a financiar: {formatCurrencyRD(financedAmount)}</p>
+        <p className="text-xs text-zinc-500">
+          {lang === "en" ? "Financed amount" : "Monto a financiar"}: {formatPrice(financedAmount)}
+        </p>
         <p className="text-3xl font-bold text-white mt-1">
-          {formatCurrencyRD(monthlyPayment)}<span className="text-sm font-normal text-zinc-500">/mes</span>
+          {formatPrice(monthlyPayment)}<span className="text-sm font-normal text-zinc-500">/{lang === "en" ? "mo" : "mes"}</span>
         </p>
         <p className="text-[11px] text-zinc-600 mt-2">
           {t("financing.calc_disclaimer")}

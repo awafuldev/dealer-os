@@ -5,7 +5,7 @@ import Link from "next/link";
 import { Menu, X, MessageCircle } from "lucide-react";
 import { buildWhatsAppLink } from "@/lib/financials";
 import { useLanguage } from "@/components/LanguageContext";
-import { LanguageSwitch } from "@/components/LanguageSwitch";
+import { LanguageSwitch, CurrencySwitch } from "@/components/LanguageSwitch";
 
 export function PublicHeader({
   orgName,
@@ -68,8 +68,9 @@ export function PublicHeader({
           ))}
         </nav>
 
-        <div className="hidden md:flex items-center gap-3 shrink-0">
+        <div className="hidden md:flex items-center gap-2.5 shrink-0">
           <LanguageSwitch variant="showroom" />
+          <CurrencySwitch variant="showroom" />
           {waLink && (
             <a
               href={waLink}
@@ -83,11 +84,12 @@ export function PublicHeader({
           )}
         </div>
 
-        <div className="flex md:hidden items-center gap-2">
+        <div className="flex md:hidden items-center gap-1.5">
           <LanguageSwitch variant="showroom" />
+          <CurrencySwitch variant="showroom" />
           <button
             onClick={() => setOpen(!open)}
-            className="p-2 text-white"
+            className="p-1.5 text-white"
             aria-label="Abrir menú"
           >
             {open ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}

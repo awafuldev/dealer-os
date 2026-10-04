@@ -2,7 +2,6 @@
 
 import Link from "next/link";
 import { ArrowLeft, Gauge, Fuel, Palette, Settings2, Hash, Tag } from "lucide-react";
-import { formatCurrencyRD } from "@/lib/financials";
 import { PublicVehicle } from "@/lib/publicVehicle";
 import { VehicleGallery } from "@/components/public/VehicleGallery";
 import { VehicleDetailActions } from "@/components/public/VehicleDetailActions";
@@ -14,7 +13,7 @@ interface VehicleDetailViewClientProps {
 }
 
 export function VehicleDetailViewClient({ vehicle, whatsapp }: VehicleDetailViewClientProps) {
-  const { t } = useLanguage();
+  const { t, formatPrice } = useLanguage();
 
   const specs = [
     { icon: Gauge, label: t("detail.mileage"), value: `${vehicle.mileage.toLocaleString("es-DO")} km` },
@@ -51,7 +50,7 @@ export function VehicleDetailViewClient({ vehicle, whatsapp }: VehicleDetailView
               {vehicle.brand} {vehicle.model}
             </h1>
             <p className="text-zinc-500 mt-0.5">{vehicle.year}</p>
-            <p className="text-4xl font-bold text-white mt-4">{formatCurrencyRD(vehicle.price)}</p>
+            <p className="text-4xl font-bold text-white mt-4">{formatPrice(vehicle.price)}</p>
           </div>
 
           <VehicleDetailActions

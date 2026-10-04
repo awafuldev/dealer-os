@@ -1,7 +1,7 @@
 "use client";
 
 import { MessageCircle } from "lucide-react";
-import { buildWhatsAppLink, formatCurrencyRD } from "@/lib/financials";
+import { buildWhatsAppLink } from "@/lib/financials";
 import { PublicContactModal } from "@/components/PublicContactModal";
 import { useLanguage } from "@/components/LanguageContext";
 
@@ -11,7 +11,7 @@ interface VehicleDetailActionsProps {
 }
 
 export function VehicleDetailActions({ vehicle, whatsapp }: VehicleDetailActionsProps) {
-  const { t } = useLanguage();
+  const { t, formatPrice } = useLanguage();
   const waLink = whatsapp
     ? buildWhatsAppLink(
         whatsapp,
@@ -19,7 +19,7 @@ export function VehicleDetailActions({ vehicle, whatsapp }: VehicleDetailActions
       )
     : null;
 
-  const priceLabel = formatCurrencyRD(vehicle.price);
+  const priceLabel = formatPrice(vehicle.price);
 
   return (
     <>

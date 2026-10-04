@@ -1,4 +1,4 @@
-﻿import { writeFile, mkdir, unlink, readFile } from "fs/promises";
+import { writeFile, mkdir, unlink, readFile } from "fs/promises";
 import path from "path";
 import crypto from "crypto";
 
@@ -52,6 +52,17 @@ export async function saveVehicleImageFile(vehicleId: string, file: File): Promi
   await mkdir(dir, { recursive: true });
   await writeFile(path.join(/*turbopackIgnore: true*/ dir, filename), bytes);
   return `/uploads/vehicles/${vehicleId}/${filename}`;
+}
+
+const BRAND_UPLOAD_ROOT = path.join(process.cwd(), "public", "uploads", "branding");
+
+export async function saveLogoImageFile(file: File): Promise<string> {
+  const bytes = Buffer.from(await file.arrayBuffer());
+  const ext = safeExtension(file.name, file.type);
+  const filename = `logo-${crypto.randomUUID()}${ext}`;
+  await mkdir(BRAND_UPLOAD_ROOT, { recursive: true });
+  await writeFile(path.join(BRAND_UPLOAD_ROOT, filename), bytes);
+  return `/uploads/branding/${filename}`;
 }
 
 export async function deleteVehicleImageFile(url: string): Promise<void> {

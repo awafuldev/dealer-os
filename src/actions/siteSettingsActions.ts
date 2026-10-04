@@ -4,6 +4,8 @@ import { revalidatePath } from "next/cache";
 import { prisma } from "@/lib/prisma";
 import { requireSession } from "@/lib/auth";
 
+import { isValidImageFile, saveLogoImageFile } from "@/lib/uploads";
+
 function strOrNull(formData: FormData, key: string): string | null {
   const v = (formData.get(key) as string)?.trim();
   return v ? v : null;
@@ -30,7 +32,14 @@ export async function updateSiteSettingsAction(formData: FormData) {
     // 1. Actualizar Organización Base (Nombre, RNC, Logo, Contacto)
     const orgName = strOrNull(formData, "orgName") || org.name;
     const rnc = strOrNull(formData, "rnc");
-    const logo = formData.has("logo") ? strOrNull(formData, "logo") : org.logo;
+    let logo = formData.has("logo") ? strOrNull(formData, "logo") : org.logo;
+    
+    // Soporte para subir archivo de imagen directamente
+    const logoFile = formData.get("logoFile") as File | null;
+    if (logoFile && logoFile.size > 0 && isValidImageFile(logoFile)) {
+      logo = await saveLogoImageFile(logoFile);
+    }
+
     const phone = strOrNull(formData, "phone");
     const whatsapp = strOrNull(formData, "whatsapp");
     const address = strOrNull(formData, "address");
