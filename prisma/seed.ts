@@ -57,7 +57,7 @@ async function main() {
         phone:     dealerPhone    || null,
         whatsapp:  dealerWhatsapp || null,
         email:     dealerEmail    || null,
-        logo:      null,
+        logo:      "/brand/kiry-logo.png",
         siteSettings: {
           create: {
             heroHeadline:    "Tu próximo vehículo, con total confianza",
